@@ -23,7 +23,7 @@ def create_connection():
     return conn
 
 
-def extract_recordings():
+def extract_recordings() -> pd.DataFrame:
     '''Returns the recordings over 24 hours old as a dataframe.'''
 
     query = f'''
@@ -42,12 +42,12 @@ def extract_recordings():
 
 def fake_insert():
     query = '''
-INSERT INTO alpha.recording (plant_id, recording_taken, last_watered, soil_moisture, temperature) VALUES
-(2, '2024-09-30 17:23:02', '2024-09-30 12:23:02', 82.765, 10.456),
-(30, '2024-09-30 12:23:02', '2024-09-30 10:23:02', 80.765, 13.456),
-(20, '2024-10-01 17:23:02', '2024-09-30 13:23:02', 83.765, 11.456),
-(22, '2024-10-01 17:24:02', '2024-09-30 14:23:02', 84.765, 12.456)
-'''
+        INSERT INTO alpha.recording (plant_id, recording_taken, last_watered, soil_moisture, temperature) VALUES
+        (2, '2024-09-30 17:23:02', '2024-09-30 12:23:02', 82.765, 10.456),
+        (30, '2024-09-30 12:23:02', '2024-09-30 10:23:02', 80.765, 13.456),
+        (20, '2024-10-01 17:23:02', '2024-09-30 13:23:02', 83.765, 11.456),
+        (22, '2024-10-01 17:24:02', '2024-09-30 14:23:02', 84.765, 12.456)
+        '''
     conn = create_connection()
     with conn.cursor() as cursor:
         cursor.execute(query)
