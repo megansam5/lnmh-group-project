@@ -32,6 +32,7 @@ def load_to_s3(recordings: pd.DataFrame) -> None:
     bucket_name = ENV['BUCKET_NAME']
     key = create_filepath()
     s3.upload_fileobj(Fileobj=recording_parquet, Bucket=bucket_name, Key=key)
+    print("Recordings uploaded.")
 
 
 if __name__ == "__main__":

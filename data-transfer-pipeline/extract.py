@@ -38,6 +38,7 @@ def extract_recordings() -> pd.DataFrame:
 
     df = pd.read_sql(query, conn, params=[cutoff_time])
     conn.close()
+    print("Recordings extracted!")
     return df
 
 
