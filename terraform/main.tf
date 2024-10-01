@@ -109,18 +109,6 @@ data  "aws_iam_policy_document" "min-schedule-permissions-policy" {
             "iam:PassRole"
         ]
     }
-
-    statement {
-        effect = "Allow"
-        resources = [
-            "arn:aws:logs:*:*:*"
-        ]
-        actions = [
-            "logs:CreateLogStream",
-            "logs:PutLogEvents",
-            "logs:CreateLogGroup"
-        ]
-    }
 }
 
 # IAM role for scheduler
@@ -207,4 +195,108 @@ resource "aws_ecs_task_definition" "data-transfer-task-definition" {
     }])
 }
 
+
+# DAILY SCHEDULER FOR TASK DEF
+
+# Assuming the role for the schedule
+data  "aws_iam_policy_document" "assume-daily-schedule-role" {
+
+    statement {
+        effect = "Allow"
+        principals {
+            type        = "Service"
+            identifiers = ["scheduler.amazonaws.com"]
+        }
+        actions = ["sts:AssumeRole"]
+    }
+}
+
+# Permissions for the role: running a task def, passing the IAM role, logging
+data  "aws_iam_policy_document" "daily-schedule-permissions-policy" {
+
+    statement {
+        effect = "Allow"
+        resources = [
+                aws_ecs_task_definition.data-transfer-task-definition.arn
+            ]
+        actions = [
+            "ecs:RunTask"
+        ]
+    }
+
+    statement {
+        effect = "Allow"
+        resources = [
+            "*"
+        ]
+        actions = [
+            "iam:PassRole"
+        ]
+    }
+
+       statement {
+        effect = "Allow"
+        resources = [
+            "arn:aws:logs:*:*:*"
+        ]
+        actions = [
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+            "logs:CreateLogGroup"
+        ]
+    }
+}
+
+# IAM role for scheduler
+resource "aws_iam_role" "iam_for_daily_schedule" {
+    name               = "c13-dog-daily-scheduler-role"
+    assume_role_policy = data.aws_iam_policy_document.assume-daily-schedule-role.json
+}
+
+# Adding policies to role
+resource "aws_iam_role_policy" "daily_schedule_role_policy" {
+  name   = "c13-dog-daily-schedule-role-policy"
+  role   = aws_iam_role.iam_for_daily_schedule.id
+  policy = data.aws_iam_policy_document.daily-schedule-permissions-policy.json
+}
+
+# The default security group
+data "aws_security_group" "c13-default-sg" {
+    id = var.SECURITY_GROUP_ID
+}
+
+# A public subnet
+data "aws_subnet" "c13-public-subnet" {
+  id = var.SUBNET_ID
+}
+
+# The cluster we will run tasks on
+data "aws_ecs_cluster" "c13-cluster" {
+    cluster_name = var.CLUSTER_NAME
+}
+
+# Schedule
+
+resource "aws_scheduler_schedule" "daily-schedule" {
+    name = "c13-dog-daily-schedule"
+    flexible_time_window {
+      mode = "OFF"
+    }
+    schedule_expression = "cron(0 9 * * ? *)"
+    schedule_expression_timezone = "UTC+1"
+
+    target {
+        arn = data.aws_ecs_cluster.c13-cluster.arn 
+        role_arn = aws_iam_role.iam_for_daily_schedule.arn
+        ecs_parameters {
+          task_definition_arn = aws_ecs_task_definition.data-transfer-task-definition.arn
+          launch_type = "FARGATE"
+          network_configuration { 
+                subnets          = [data.aws_subnet.c13-public-subnet.id]
+                security_groups  = [data.aws_security_group.c13-default-sg.id]
+                assign_public_ip = true
+            }
+        }
+    }
+}
 
