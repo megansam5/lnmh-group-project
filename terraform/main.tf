@@ -4,6 +4,8 @@ provider "aws" {
     secret_key = var.AWS_SECRET_KEY
 }
 
+# LAMBDA
+
 # ECR with pipeline image
 data "aws_ecr_image" "pipeline_image" {
   repository_name = "c13-dog-botany-pipeline"
@@ -66,4 +68,86 @@ resource "aws_lambda_function" "pipeline_lambda" {
       # Needed values for lambda 
     }
   }
+}
+
+# MINUTE SCHEDULE FOR LAMBDA
+
+# Assuming the role for the schedule
+data  "aws_iam_policy_document" "assume-min-schedule-role" {
+
+    statement {
+        effect = "Allow"
+
+        principals {
+            type        = "Service"
+            identifiers = ["scheduler.amazonaws.com"]
+        }
+
+        actions = ["sts:AssumeRole"]
+    }
+}
+
+# Permissions for the role: invoking a lambda, passing the IAM role
+data  "aws_iam_policy_document" "min-schedule-permissions-policy" {
+
+    statement {
+        effect = "Allow"
+        resources = [
+                aws_lambda_function.pipeline_lambda.arn
+            ]
+        actions = [
+            "lambda:Invoke"
+        ]
+    }
+
+    statement {
+        effect = "Allow"
+        resources = [
+            "*"
+        ]
+        actions = [
+            "iam:PassRole"
+        ]
+    }
+
+    statement {
+        effect = "Allow"
+        resources = [
+            "arn:aws:logs:*:*:*"
+        ]
+        actions = [
+            "logs:CreateLogStream",
+            "logs:PutLogEvents",
+            "logs:CreateLogGroup"
+        ]
+    }
+}
+
+# IAM role for scheduler
+resource "aws_iam_role" "iam_for_min_schedule" {
+    name               = "c13-dog-minute-scheduler-role"
+    assume_role_policy = data.aws_iam_policy_document.assume-min-schedule-role.json
+}
+
+# Adding policies to role
+resource "aws_iam_role_policy" "min_schedule_role_policy" {
+  name   = "c13-dog-minute-schedule-role-policy"
+  role   = aws_iam_role.iam_for_min_schedule.id
+  policy = data.aws_iam_policy_document.min-schedule-permissions-policy.json
+}
+
+# Minute schedule
+
+resource "aws_scheduler_schedule" "minute-schedule" {
+    name = "c13-dog-minute-schedule"
+    flexible_time_window {
+      mode = "OFF"
+    }
+    schedule_expression = "cron(* * * * ? *)"
+    schedule_expression_timezone = "UTC+1"
+
+    target {
+        arn = aws_lambda_function.pipeline_lambda.arn 
+        role_arn = aws_iam_role.iam_for_min_schedule.arn
+    }
 }
