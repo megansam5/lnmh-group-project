@@ -25,6 +25,7 @@ def create_connection():
 
 def extract_recordings() -> pd.DataFrame:
     '''Returns the recordings over 24 hours old as a dataframe.'''
+    load_dotenv()
 
     query = f'''
     SELECT recording_id, plant_id, recording_taken, last_watered, soil_moisture, temperature

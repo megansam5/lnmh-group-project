@@ -11,3 +11,5 @@ terraform.tfvars
 
 .env
 *.env
+
+__pycache__/
