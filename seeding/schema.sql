@@ -7,28 +7,28 @@ CREATE TABLE alpha.location (
     location_id SMALLINT UNIQUE NOT NULL,
     latitude FLOAT NOT NULL,
     longitude FLOAT NOT NULL,
-    city_name VARCHAR(100) NOT NULL,
-    country_code VARCHAR(100) NOT NULL,
+    city_name VARCHAR(128) NOT NULL,
+    country_code VARCHAR(4) NOT NULL,
     PRIMARY KEY (location_id)
 );
 
 CREATE TABLE alpha.botanist (
     botanist_id SMALLINT UNIQUE NOT NULL,
-    botanist_name VARCHAR(100) UNIQUE NOT NULL,
-    botanist_email VARCHAR(100),
-    botanist_phone_no VARCHAR(100),
+    botanist_name VARCHAR(128) UNIQUE NOT NULL,
+    botanist_email VARCHAR(128),
+    botanist_phone_no VARCHAR(32),
     PRIMARY KEY (botanist_id)
 );
 
 CREATE TABLE alpha.plant (
     plant_id SMALLINT UNIQUE NOT NULL,
-    plant_name VARCHAR(100) NOT NULL,
-    scientific_name VARCHAR(100) NOT NULL,
+    plant_name VARCHAR(128) NOT NULL,
+    scientific_name VARCHAR(128) NOT NULL,
     location_id SMALLINT NOT NULL,
     botanist_id SMALLINT NOT NULL,
     PRIMARY KEY (plant_id),
-    FOREIGN KEY (botanist_id) REFERENCES botanist,
-    FOREIGN KEY (location_id) REFERENCES location
+    FOREIGN KEY (botanist_id) REFERENCES alpha.botanist(botanist_id),
+    FOREIGN KEY (location_id) REFERENCES alpha.location(location_id)
 );
 
 CREATE TABLE alpha.recording (
@@ -39,7 +39,7 @@ CREATE TABLE alpha.recording (
     soil_moisture FLOAT,
     temperature FLOAT,
     PRIMARY KEY (recording_id),
-    FOREIGN KEY (plant_id) REFERENCES plant
+    FOREIGN KEY (plant_id) REFERENCES alpha.plant(plant_id)
 );
 
 INSERT INTO alpha.location (location_id, latitude, longitude, city_name, country_code) VALUES
