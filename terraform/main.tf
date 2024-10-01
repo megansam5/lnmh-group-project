@@ -151,3 +151,60 @@ resource "aws_scheduler_schedule" "minute-schedule" {
         role_arn = aws_iam_role.iam_for_min_schedule.arn
     }
 }
+
+# TASK DEFINITION FOR MOVING DATA
+
+# ECR with moving-data image
+data "aws_ecr_image" "data_transfer_image" {
+  repository_name = "c13-dog-data-transfer"
+  image_tag       = "latest"
+}
+
+# IAM role for running ECS task (already a role)
+data "aws_iam_role" "iam_for_task_def" {
+  name = "ecsTaskExecutionRole"
+}
+
+# Task definition for ECS task
+resource "aws_ecs_task_definition" "data-transfer-task-definition" {
+  family = "c13-dog-data-transfer-task-def"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  execution_role_arn = data.aws_iam_role.iam_for_task_def.arn
+  cpu       = 256
+  memory    = 512
+  container_definitions = jsonencode([
+    {
+      name      = "c13-dog-data-transfer"
+      image     = data.aws_ecr_image.data_transfer_image.image_uri
+      essential = true
+      portMappings = [
+        {
+          containerPort = 80
+          hostPort      = 80
+        }
+      ]
+      environment = [
+        {
+            name="EXAMPLE1"
+            value="EXAMPLEVALUE1"
+        },
+        {
+            name="EXAMPLE2"
+            value="EXAMPLEVALUE2"
+        }
+      ]
+      logConfiguration = {
+                logDriver = "awslogs"
+                "options": {
+                    awslogs-group = "/ecs/c13-dog-data-transfer-task-def"
+                    awslogs-stream-prefix = "ecs"
+                    awslogs-region = "eu-west-2"
+                    mode = "non-blocking"
+                    max-buffer-size = "25m"
+                }
+      }
+    }])
+}
+
+
