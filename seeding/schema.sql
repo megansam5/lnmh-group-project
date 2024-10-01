@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS recording;
-DROP TABLE IF EXISTS plant;
-DROP TABLE IF EXISTS botanist;
-DROP TABLE IF EXISTS location;
+DROP TABLE IF EXISTS alpha.recording;
+DROP TABLE IF EXISTS alpha.plant;
+DROP TABLE IF EXISTS alpha.botanist;
+DROP TABLE IF EXISTS alpha.location;
 
-CREATE TABLE location (
+CREATE TABLE alpha.location (
     location_id SMALLINT UNIQUE NOT NULL,
     latitude FLOAT NOT NULL,
     longitude FLOAT NOT NULL,
@@ -12,19 +12,18 @@ CREATE TABLE location (
     PRIMARY KEY (location_id)
 );
 
-CREATE TABLE botanist (
+CREATE TABLE alpha.botanist (
     botanist_id SMALLINT UNIQUE NOT NULL,
     botanist_name VARCHAR(100) UNIQUE NOT NULL,
     botanist_email VARCHAR(100),
     botanist_phone_no VARCHAR(100),
     PRIMARY KEY (botanist_id)
 );
-n
-CREATE TABLE plant (
+
+CREATE TABLE alpha.plant (
     plant_id SMALLINT UNIQUE NOT NULL,
     plant_name VARCHAR(100) NOT NULL,
     scientific_name VARCHAR(100) NOT NULL,
-    image_url VARCHAR(100),
     location_id SMALLINT NOT NULL,
     botanist_id SMALLINT NOT NULL,
     PRIMARY KEY (plant_id),
@@ -32,18 +31,18 @@ CREATE TABLE plant (
     FOREIGN KEY (location_id) REFERENCES location
 );
 
-CREATE TABLE recording (
+CREATE TABLE alpha.recording (
     recording_id BIGINT IDENTITY(1,1),
     plant_id SMALLINT NOT NULL,
-    recording_taken TIMESTAMP NOT NULL,
-    last_watered TIMESTAMP,
+    recording_taken DATETIME2 NOT NULL,
+    last_watered DATETIME2,
     soil_moisture FLOAT,
     temperature FLOAT,
     PRIMARY KEY (recording_id),
     FOREIGN KEY (plant_id) REFERENCES plant
 );
 
-INSERT INTO location (location_id, latitude, longitude, city_name, country_code) VALUES
+INSERT INTO alpha.location (location_id, latitude, longitude, city_name, country_code) VALUES
 (1, -19.32556, -41.25528, 'Resplendor', 'BR'),
 (2, 33.95015, -118.03917, 'South Whittier', 'US'),
 (3, 7.65649, 4.92235, 'Efon-Alaaye', 'NG'),
@@ -90,12 +89,12 @@ INSERT INTO location (location_id, latitude, longitude, city_name, country_code)
 (44, 14.14989, 121.3152, 'Calauan', 'PH'),
 (45, 17.94979, -94.91386, 'Acayucan', 'MX');
 
-INSERT INTO botanist (botanist_id, botanist_name, botanist_email, botanist_phone_no) VALUES
+INSERT INTO alpha.botanist (botanist_id, botanist_name, botanist_email, botanist_phone_no) VALUES
 (1, 'Carl Linnaeus', 'carl.linnaeus@lnhm.co.uk', '(146)994-1635x35992'),
 (2, 'Gertrude Jekyll', 'gertrude.jekyll@lnhm.co.uk', '001-481-273-3691x127'),
 (3, 'Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948');
 
-INSERT INTO plant (plant_id, plant_name, scientific_name, location_id, botanist_id) VALUES
+INSERT INTO alpha.plant (plant_id, plant_name, scientific_name, location_id, botanist_id) VALUES
 (0, 'Golden Pothos', 'Epipremnum Aureum', 1, 1),
 (1, 'Venus Flytrap', 'Dionaea Muscipula', 2, 2),
 (2, 'Corpse Flower', 'Amorphophallus Barteri', 3, 1),
