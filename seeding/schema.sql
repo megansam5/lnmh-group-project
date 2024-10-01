@@ -41,3 +41,15 @@ CREATE TABLE recording (
     PRIMARY KEY (recording_id),
     FOREIGN KEY (plant_id) REFERENCES plant
 );
+
+INSERT INTO location (latitude, longitude, city_name, country_code) VALUES
+(),
+();
+
+INSERT INTO botanist (botanist_name, botanist_email, botanist_phone_no) VALUES
+(),
+();
+
+INSERT INTO plant (plant_id, plant_name, scientific_name, location_id, botanist_id) VALUES
+(),
+();
