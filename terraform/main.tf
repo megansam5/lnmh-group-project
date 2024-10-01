@@ -363,4 +363,12 @@ resource "aws_ecs_service" "dashboard_service" {
 }
 
 
+# S3 BUCKET
+
+# For long term storage
+
+resource "aws_s3_bucket" "botany_long_term" {
+  bucket = "c13-dog-botany-long-term"
+  force_destroy = true
+}
 
