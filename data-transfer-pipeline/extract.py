@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 
 def create_connection():
-    '''Returns a connection to connect to the database. '''
+    """Returns a connection to connect to the database. """
     conn = pyodbc.connect(
         'DRIVER={ODBC Driver 18 for SQL Server};'
         f'SERVER={ENV['DB_HOST']};'

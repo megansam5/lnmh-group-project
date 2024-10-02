@@ -1,6 +1,7 @@
 # Daily Data Transfer Pipeline
 
 ## Things still to do:
+
 - Check which columns want to be stored in s3. (at the moment only columns from recording as can link back to RDS)
 - Check the connection works in Dockerfile (check with coaches)
 - Check this works with around 72,000 rows of data (should take ~30/40 seconds) - optimize if not
@@ -21,8 +22,7 @@ This has three main stages:
 - `load.py`: Handles loading the extracted data to S3.
 - `clean.py`: Cleans old data from the RDS.
 - `pipeline.py`: Main script to run the full ETL pipeline.
-- `Dockerfile`: Allows the pipeline to be dockerized.
-`tests/`               
+- `Dockerfile`: Allows the pipeline to be dockerized.              
 - `test_extract.py`: Tests for the extract functionality.
 - `test_load.py`: Tests for the load functionality.
 - `test_clean.py`: Tests for the clean functionality.
