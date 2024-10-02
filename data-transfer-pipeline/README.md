@@ -48,3 +48,11 @@ SCHEMA_NAME=<your-database-schema>
 
 Run the pipeline with `python3 pipeline.py`.
 
+## Creating and pushing Docker file to ECR
+
+- Authenticate docker with `aws ecr get-login-password --region YOUR_AWS_REGION | docker login --username AWS --password-stdin YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com`
+- Create an ECR repository with `aws ecr create-repository --repository-name YOUR_REPOSITORY_NAME --region YOUR_AWS_REGION`
+- Build the image with the correct platform with `docker build -t YOUR_IMAGE_NAME . --platform "linux/amd64"`
+- Tag the image with `docker tag YOUR_IMAGE_NAME:latest YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/YOUR_REPOSITORY_NAME:latest`
+- Push the image to the ECR with `docker push YOUR_AWS_ACCOUNT_ID.dkr.ecr.YOUR_AWS_REGION.amazonaws.com/YOUR_REPOSITORY_NAME:latest`
+
