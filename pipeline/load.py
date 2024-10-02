@@ -3,6 +3,7 @@
 #pylint:disable= line-too-long, unused-variable, c-extension-no-member,invalid-name
 
 import os
+from datetime import datetime
 
 import pandas as pd
 import pyodbc
@@ -39,7 +40,9 @@ def upload_transaction_data(recordings:pd.DataFrame) -> None:
         f'SERVER={DB_HOST},{DB_PORT};'
         f'DATABASE={DB_NAME};'
         f'UID={DB_USER};'
-        f'PWD={DB_PASSWORD}'
+        f'PWD={DB_PASSWORD};'
+        f'Encrypt=yes;'
+        f'TrustServerCertificate=yes;'
     )
 
 
@@ -47,14 +50,14 @@ def upload_transaction_data(recordings:pd.DataFrame) -> None:
         cursor = connection.cursor()
 
         # Generating placeholders for each row of data, needed for insertion.
-        placeholders = ', '.join(['(?, ?, ?, ?, ?, ?)'] * len(recordings))
+        placeholders = ', '.join(['(?, ?, ?, ?, ?)'] * len(recordings))
 
         # Base query for inserting into the recording table, for all columns.
         # We are only expecting 50 rows / plant recordings at a given time, so we
         # don't have to consider batch size bottlenecks or chunks.
         insert_query = f'''
         INSERT INTO {DB_SCHEMA}.recording
-        (recording_id, plant_id, recording_taken, last_watered, soil_moisture, temperature)
+        (plant_id, recording_taken, last_watered, soil_moisture, temperature)
         VALUES {placeholders};
         '''
 
@@ -76,4 +79,27 @@ if __name__ == '__main__':
     # For future testing purposes, with an
     # example MS SQL database or similar.
 
-    pass
+    test_data_5 = {
+    'plant_id': [1, 2, 3, 4, 5],  # Ensure these plant_ids exist in alpha.plant
+    'recording_taken': [
+        datetime(2024, 4, 27, 10, 0, 0),
+        datetime(2024, 4, 27, 10, 5, 0),
+        datetime(2024, 4, 27, 10, 10, 0),
+        datetime(2024, 4, 27, 10, 15, 0),
+        datetime(2024, 4, 27, 10, 20, 0)
+    ],
+    'last_watered': [
+        datetime(2024, 4, 25, 8, 30, 0),
+        datetime(2024, 4, 25, 8, 35, 0),
+        datetime(2024, 4, 25, 8, 40, 0),
+        datetime(2024, 4, 25, 8, 45, 0),
+        datetime(2024, 4, 25, 8, 50, 0)
+    ],
+    'soil_moisture': [35.0, 40.5, 38.2, 42.7, 37.9],
+    'temperature': [22.5, 23.0, 22.8, 23.5, 22.9]
+}
+
+
+    test_recordings_df = pd.DataFrame(test_data_5)
+
+    upload_transaction_data(test_recordings_df)
