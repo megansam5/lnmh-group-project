@@ -3,11 +3,42 @@
 #pylint:disable= line-too-long, unused-variable, c-extension-no-member,invalid-name
 
 import os
-from datetime import datetime
+import random
+from datetime import datetime, timedelta
 
 import pandas as pd
 import pyodbc
 from dotenv import load_dotenv
+
+
+
+def generate_test_data(num_rows: int) -> pd.DataFrame:
+    '''
+    Generates and returns test data with the specified number of rows. We will only
+    be expecting 50 rows of recording data at a time, but this function allows us to 
+    stress-test our load functionality, for larger insertion batches.
+    '''
+
+    base_time = datetime.now() 
+    available_plant_ids = [i for i in range(0, 51) if i not in [7, 43]]
+
+    test_data = {
+        # Assuming with have 50 individual plants, with IDs starting from 0.
+        'plant_id': [random.choice(available_plant_ids) for _ in range(num_rows)],  
+
+        # Generating somee random time in the future, in multiples of 5 minute periods.
+        'recording_taken': [base_time + timedelta(minutes=5*i) for i in range(num_rows)],
+
+        # Generating random times in the past, in decrements of 30 minute periods.
+        'last_watered': [base_time - timedelta(days=2, minutes=30*i) for i in range(num_rows)],
+
+        # Finally for float values, a uniformly random figure is chosen within a predefined range.
+        # Rounding is applied to 2.d.p for moisture adn temperature values, as we don't want potentially 3+ d.p.
+        'soil_moisture': [round(random.uniform(30.0, 45.0), 2) for _ in range(num_rows)],
+        'temperature': [round(random.uniform(20.0, 25.0), 2) for _ in range(num_rows)]
+    }
+    return pd.DataFrame(test_data)
+
 
 
 
@@ -79,27 +110,16 @@ if __name__ == '__main__':
     # For future testing purposes, with an
     # example MS SQL database or similar.
 
-    test_data_5 = {
-    'plant_id': [1, 2, 3, 4, 5],  # Ensure these plant_ids exist in alpha.plant
-    'recording_taken': [
-        datetime(2024, 4, 27, 10, 0, 0),
-        datetime(2024, 4, 27, 10, 5, 0),
-        datetime(2024, 4, 27, 10, 10, 0),
-        datetime(2024, 4, 27, 10, 15, 0),
-        datetime(2024, 4, 27, 10, 20, 0)
-    ],
-    'last_watered': [
-        datetime(2024, 4, 25, 8, 30, 0),
-        datetime(2024, 4, 25, 8, 35, 0),
-        datetime(2024, 4, 25, 8, 40, 0),
-        datetime(2024, 4, 25, 8, 45, 0),
-        datetime(2024, 4, 25, 8, 50, 0)
-    ],
-    'soil_moisture': [35.0, 40.5, 38.2, 42.7, 37.9],
-    'temperature': [22.5, 23.0, 22.8, 23.5, 22.9]
-}
+    # test = generate_test_data(50)
+    # print(test.tail())
+    test_cases = {
+        # '5': generate_test_data(5),
+        '50': generate_test_data(50),
+        # '100': generate_test_data(100), 
+        # '150': generate_test_data(50)
 
+    }
 
-    test_recordings_df = pd.DataFrame(test_data_5)
-
-    upload_transaction_data(test_recordings_df)
+    for num, df in test_cases.items():
+        print(f'--- Inserting {num} records ---')
+        upload_transaction_data(df)
