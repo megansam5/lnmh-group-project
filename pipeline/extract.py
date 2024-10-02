@@ -1,4 +1,7 @@
 """This script connects to and extracts data from the plant API"""
+
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 import requests
 import pandas as pd
 
@@ -24,18 +27,21 @@ def build_entry(data: dict) -> dict:
 
 def extract() -> pd.DataFrame:
     """This function goes through all the plants, extracting the key information,
-    and then turns it into a dataframe ready for cleaning. """
-    plant_count = 0
+    and then turns it into a dataframe ready for cleaning."""
+    plant_count = 50
     recordings = []
-    while plant_count < 50:
-        plant_data = get_request(plant_count)
-        if not plant_data.get("error"):
-            recordings.append(build_entry(plant_data))
-        plant_count += 1
 
-    return pd.DataFrame(recordings)
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = {executor.submit(get_request, plant_id):
+                   plant_id for plant_id in range(plant_count+1)}
+
+        for future in as_completed(futures):
+            plant_data = future.result()
+            if not plant_data.get("error"):
+                recordings.append(build_entry(plant_data))
+
+    return pd.DataFrame(recordings).sort_values("plant_id").reset_index(drop=True)
 
 
 if __name__ == "__main__":
-
     print(extract())
