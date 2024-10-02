@@ -5,22 +5,7 @@ from os import environ as ENV
 import pyodbc
 from dotenv import load_dotenv
 
-
-def create_connection():
-    '''Returns a connection to connect to the database. '''
-    conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 18 for SQL Server};'
-        f'SERVER={ENV['DB_HOST']};'
-        f'DATABASE={ENV['DB_NAME']};'
-        f'UID={ENV['DB_USER']};'
-        f'PWD={ENV['DB_PASSWORD']};'
-        'Encrypt=yes;'
-        'TrustServerCertificate=yes;'
-        # this workings in production but should be:
-        # f'TrustStore={path to pem certificate}' when deployed
-        # check how this would work in docker image
-    )
-    return conn
+from extract import create_connection
 
 
 def delete_outdataed_recordings() -> None:
