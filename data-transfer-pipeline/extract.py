@@ -44,6 +44,7 @@ def extract_recordings() -> pd.DataFrame:
 
 
 def fake_insert():
+    """Inserts fake recordings into database to check pipeline works - delete before putting into image."""
     query = '''
         INSERT INTO alpha.recording (plant_id, recording_taken, last_watered, soil_moisture, temperature) VALUES
         (2, '2024-09-30 17:23:02', '2024-09-30 12:23:02', 82.765, 10.456),

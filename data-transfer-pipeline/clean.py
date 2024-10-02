@@ -2,7 +2,6 @@
 from datetime import datetime, timedelta
 from os import environ as ENV
 
-import pandas as pd
 import pyodbc
 from dotenv import load_dotenv
 
