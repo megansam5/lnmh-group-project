@@ -28,8 +28,8 @@ def extract() -> pd.DataFrame:
     plant_count = 0
     recordings = []
     while plant_count < 50:
-        plant_data = get_request(id)
-        if not get_request(id).get("error"):
+        plant_data = get_request(plant_count)
+        if not plant_data.get("error"):
             recordings.append(build_entry(plant_data))
         plant_count += 1
 
