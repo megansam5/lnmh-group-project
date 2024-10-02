@@ -1,3 +1,4 @@
+"""Script to extract old recordings from the short term storage."""
 from datetime import datetime, timedelta
 from os import environ as ENV
 

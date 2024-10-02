@@ -13,3 +13,6 @@ terraform.tfvars
 *.env
 
 __pycache__/
+__pycache__
+.ipynb_checkpoints
+.pytest_cache
