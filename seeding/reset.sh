@@ -1,5 +1,3 @@
-# source .env
-
 # When working from the pipeline dir, source .env causes an error, 
 # as if can't find an .env file from it's local seeding directory.
 # REPO_ROOT reverts to the base dir relative to the GitHub repo, 
