@@ -1,3 +1,4 @@
+# pylint: skip-file
 from unittest.mock import patch
 
 from pipeline import full_pipeline

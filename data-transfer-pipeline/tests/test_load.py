@@ -1,3 +1,4 @@
+# pylint: skip-file
 from unittest.mock import patch, MagicMock
 
 import pandas as pd
