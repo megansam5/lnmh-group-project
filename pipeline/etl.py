@@ -1,12 +1,17 @@
+"""This script runs the pipeline"""
 
-
-from os import environ as ENV
 from dotenv import load_dotenv
 
 from extract import extract
 from transform import transform
 from load import load
 
-if __name__ == "__main__":
+
+def run():
+    """This function runs all the components."""
     load_dotenv()
     load(transform(extract()))
+
+
+if __name__ == "__main__":
+    run()

@@ -3,3 +3,4 @@ pytest
 pandas
 requests
 python-dotenv
+pymssql

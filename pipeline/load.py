@@ -1,18 +1,15 @@
 '''Load functionality of the LMNH plant measurement ETL pipeline.`'''
 
 
-import os
-import random
-from datetime import datetime, timedelta
-
 from os import environ as ENV
-
-from extract import extract
-from transform import transform
 
 import pandas as pd
 import pymssql
 from dotenv import load_dotenv
+
+
+from extract import extract
+from transform import transform
 
 
 def create_connection():
