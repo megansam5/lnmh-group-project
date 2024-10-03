@@ -32,7 +32,16 @@ This has three main stages:
 
 1. Create a virtual environment.
 2. Install dependencies by running `pip install -r requirements.txt`
-3. Create a `.env` file with the following:
+3. Run the following commands to get the correct pymssql:
+```
+pip uninstall pymssql
+brew install freetds
+export CFLAGS="-I$(brew --prefix openssl)/include"
+export LDFLAGS="-L$(brew --prefix openssl)/lib -L/usr/local/opt/openssl/lib"
+export CPPFLAGS="-I$(brew --prefix openssl)/include"
+pip install --pre --no-binary :all: pymssql==2.2.11 --no-cache
+```
+4. Create a `.env` file with the following:
 ```
 DB_HOST=<your-database-host>
 DB_NAME=<your-database-name>
