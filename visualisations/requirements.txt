@@ -1,4 +1,5 @@
-altair
 streamlit
+altair
 pandas
-pyathena
+pymssql
+python-dotenv
