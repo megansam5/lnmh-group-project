@@ -21,6 +21,7 @@ jobs:
       - name: "Test data-transfer-pipeline"
         run:  |
               cd data-transfer-pipeline/
+              echo "SCHEMA_NAME=${{ secrets.SCHEMA_NAME }}" > .env
               pip install -r requirements.txt
               pytest
               echo 'Data transfer pipeline tests finished.'
