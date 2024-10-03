@@ -331,8 +331,20 @@ resource "aws_ecs_task_definition" "dashboard_task_definition" {
       ]
       environment = [
         {
-          name  = "EXAMPLE1"
-          value = "EXAMPLEVALUE1"
+            name="DB_NAME"
+            value=var.DB_NAME
+        },
+        {
+            name="DB_HOST"
+            value=var.DB_HOST
+        },
+        {
+            name="DB_USER"
+            value=var.DB_USER
+        },
+        {
+            name="DB_PASSWORD"
+            value=var.DB_PASSWORD
         }
       ]
       logConfiguration = {
