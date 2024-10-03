@@ -25,3 +25,4 @@ COPY clean.py .
 COPY pipeline.py .
 
 CMD ["python", "pipeline.py"]
+

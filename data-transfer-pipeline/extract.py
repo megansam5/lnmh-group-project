@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from os import environ as ENV
 
 import pandas as pd
-import pymssql
 from dotenv import load_dotenv
+import pymssql
 
 
 def create_connection():
@@ -42,4 +42,4 @@ def extract_recordings() -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    pass
+    extract_recordings()

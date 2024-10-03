@@ -1,0 +1,4 @@
+altair
+streamlit
+pandas
+pyathena

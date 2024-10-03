@@ -43,6 +43,15 @@ CREATE TABLE alpha.recording (
     FOREIGN KEY (plant_id) REFERENCES alpha.plant(plant_id)
 );
 
+CREATE TABLE alpha.plant_average (
+    plant_id SMALLINT UNIQUE NOT NULL,
+    average_temperature FLOAT NOT NULL DEFAULT 0.00,
+    average_soil_moisture FLOAT NOT NULL DEFAULT 0.00,
+    recording_count INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (plant_id),
+    FOREIGN KEY (plant_id) REFERENCES alpha.plant(plant_id)
+);
+
 INSERT INTO alpha.location (location_id, latitude, longitude, city_name, country_code) VALUES
 (1, -19.32556, -41.25528, 'Resplendor', 'BR'),
 (2, 33.95015, -118.03917, 'South Whittier', 'US'),
