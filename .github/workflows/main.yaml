@@ -1,0 +1,71 @@
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name:    "Run tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Install python"
+        uses: actions/setup-python@v5.1.1
+        with:
+          python-version: '3.12'
+      - name: "Get repo code"
+        uses: actions/checkout@v4
+      - name: "Test data-transfer-pipeline"
+        run:  |
+              cd data-transfer-pipeline/
+              pip install -r requirements.txt
+              pytest
+              echo 'Data transfer pipeline tests finished.'
+              cd ..
+      - name: "Test pipeline"
+        run:  |
+              cd pipeline/
+              pip install -r requirements.txt
+              pytest
+              echo 'Pipeline tests finished.'
+              cd ..
+      - name: "Test visualisations"
+        run:  |
+              cd visualisations/
+              pip install -r requirements.txt
+              pytest
+              echo 'Visualisation tests finished.'
+              cd ..
+  lint:
+    name:    "Run lint"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Install Python"
+        uses: actions/setup-python@v5.1.1
+        with:
+          python-version: '3.12'
+      - name: "Get repo code"
+        uses: actions/checkout@v4
+      - name: "Install pylint"
+        run:  pip install pylint
+      - name: "Lint data-transfer-pipeline"
+        run:  |
+              cd data-transfer-pipeline/
+              pylint *.py --fail-under=8
+              echo 'Data transfer pipeline linting finished.'
+              cd ..
+      - name: "Test pipeline"
+        run:  |
+              cd pipeline/
+              pylint *.py --fail-under=8
+              echo 'Pipeline linting finished.'
+              cd ..
+      - name: "Test visualisations"
+        run:  |
+              cd visualisations/
+              pylint *.py --fail-under=8
+              echo 'Visualisation linting finished.'
+              cd ..
