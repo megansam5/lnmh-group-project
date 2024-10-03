@@ -1,4 +1,3 @@
-# Define provider
 provider "aws" {
     region = var.AWS_REGION
     access_key = var.AWS_ACCESS_KEY
@@ -11,9 +10,9 @@ locals {
   athena_results   = "s3://c13-dog-botany-long-term/results/" # Results folder
 }
 
-# IAM Role for Glue and Athena with necessary permissions
+# IAM Role with assume role for glue and athena
 resource "aws_iam_role" "glue_athena_role" {
-  name = "glue_athena_execution_role"
+  name = "c13-dog-glue_athena_execution_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
@@ -35,10 +34,9 @@ resource "aws_iam_role" "glue_athena_role" {
   })
 }
 
-# IAM Policy for Glue and Athena - S3 and Glue permissions
+# added policies for glue and athena ------ 
 resource "aws_iam_policy" "glue_athena_s3_policy" {
-  name        = "glue_athena_s3_policy"
-  description = "Policy to allow Glue and Athena to access S3 data"
+  name        = "c13-dog-glue_athena_s3_policy"
   policy      = jsonencode({
     Version: "2012-10-17",
     Statement: [
@@ -64,6 +62,23 @@ resource "aws_iam_policy" "glue_athena_s3_policy" {
           "glue:BatchCreatePartition"
         ],
         Resource: "*"
+      },
+      {
+        Effect: "Allow",
+        Action: [
+          "athena:StartQueryExecution",
+          "athena:GetQueryExecution",
+          "athena:GetQueryResults",
+          "athena:GetWorkGroup"
+        ],
+        Resource: "*"
+      },
+      {
+        Effect: "Allow",
+        Action: [
+          "athena:ListWorkGroups"
+        ],
+        Resource: "*"
       }
     ]
   })
@@ -75,20 +90,20 @@ resource "aws_iam_role_policy_attachment" "glue_athena_policy_attachment" {
   policy_arn = aws_iam_policy.glue_athena_s3_policy.arn
 }
 
-# Glue Crawler to discover schema of S3 data
+# Glue Crawler (creates schema of s3)
 resource "aws_glue_crawler" "plant_recordings_crawler" {
-  name         = "plant-recordings-crawler"
+  name         = "c13-dog-plant-recordings-crawler"
   role         = aws_iam_role.glue_athena_role.arn
-  database_name = "botany_db"  # Glue/Athena database name
+  database_name = aws_glue_catalog_database.botany_db.name 
 
   s3_target {
     path = "s3://${local.s3_data_bucket}/plant_recordings/"
   }
 
-  schedule = "cron(0 0 * * ? *)"  # Runs every day at midnight
+  schedule = "cron(0 8 * * ? *)"  
 
   configuration = jsonencode({
-    "Version"                  : "1.0",
+    "Version"                  : 1.0,
     "Grouping"                 : { "TableGroupingPolicy" : "CombineCompatibleSchemas" },
     "CrawlerOutput"            : { "Partitions" : { "AddOrUpdateBehavior" : "InheritFromTable" } }
   })
@@ -98,7 +113,7 @@ resource "aws_glue_crawler" "plant_recordings_crawler" {
 
 # Athena Workgroup
 resource "aws_athena_workgroup" "plant_workgroup" {
-  name = "plant-workgroup"
+  name = "c13-dog-plant-workgroup"
   configuration {
     enforce_workgroup_configuration = true
     publish_cloudwatch_metrics_enabled = true
@@ -108,12 +123,12 @@ resource "aws_athena_workgroup" "plant_workgroup" {
   }
 }
 
-# Glue Database - Athena uses the Glue Data Catalog for metadata
+# Glue Database 
 resource "aws_glue_catalog_database" "botany_db" {
-  name = "botany_db"
+  name = "c13_dog_botany_db"
 }
 
-# Glue Catalog Table - Define Athena table metadata (not querying)
+# Glue Catalog Table 
 resource "aws_glue_catalog_table" "plant_recordings_table" {
   name          = "plant_recordings"
   database_name = aws_glue_catalog_database.botany_db.name
@@ -169,12 +184,12 @@ resource "aws_glue_catalog_table" "plant_recordings_table" {
   }
 }
 
-# Athena table creation using null_resource and local-exec to run SQL via AWS CLI
+# Athena table creation 
 resource "null_resource" "create_athena_table" {
   provisioner "local-exec" {
     command = <<-EOT
       aws athena start-query-execution \
-        --query-string "CREATE EXTERNAL TABLE IF NOT EXISTS botany_db.plant_recordings (
+        --query-string "CREATE EXTERNAL TABLE IF NOT EXISTS c13_dog_botany_db.plant_recordings (
             recording_id BIGINT,
             plant_id BIGINT,
             recording_taken TIMESTAMP,

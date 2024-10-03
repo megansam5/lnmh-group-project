@@ -1,3 +1,4 @@
 altair
 streamlit
 pandas
+pyathena
