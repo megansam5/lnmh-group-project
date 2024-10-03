@@ -1,11 +1,11 @@
 """This file tests the functionality of the extract script."""
 
 from unittest import TestCase
-from unittest.mock import patch, MagicMock, Mock
+from unittest.mock import patch, MagicMock
+from concurrent.futures import Future
+
 import pytest
 import requests
-
-from concurrent.futures import Future
 import pandas as pd
 
 from extract import get_request, build_entry, extract
@@ -46,7 +46,8 @@ class TestBuildEntry(TestCase):
     """Tests for the build entry function."""
 
     def test_build_entry_complete_data(self):
-        """Tests that build entry returns a dict with the correct information when given all values."""
+        """Tests that build entry returns a dict with the 
+        correct information when given all values."""
         input = {
             "plant_id": 1,
             "recording_taken": "2024-10-03 12:43:48",
@@ -95,18 +96,30 @@ class TestExtractFunction(TestCase):
     @patch('extract.get_request')
     @patch('extract.as_completed')
     @patch('extract.ThreadPoolExecutor')
-    def test_extract_success(self, fake_executor, fake_as_completed, fake_get_request, fake_build_entry):
-        plant_data_1 = {"plant_id": 1,
-                        "recording_taken": "2024-10-01", "soil_moisture": 30.0}
-        plant_data_2 = {"plant_id": 2,
-                        "recording_taken": "2024-10-01", "soil_moisture": 45.0}
-        plant_data_3 = {"plant_id": 3,
-                        "recording_taken": "2024-10-01", "soil_moisture": 25.0}
+    def test_extract_success(self, fake_executor, fake_as_completed,
+                             fake_get_request, fake_build_entry):
+        """Tests that the extract function works as intended with three 
+        valid entries (reduced size for testing)."""
+        plant_data_1 = {"plant_id": 1, "recording_taken": "2024-10-03 12:43:48",
+                        "last_watered": "Wed, 02 Oct 2024 13: 54: 32 GMT",
+                        "soil_moisture": 30.0, "temperature": 20.0}
+        plant_data_2 = {"plant_id": 2, "recording_taken": "2024-10-03 12:42:48",
+                        "last_watered": "Wed, 02 Oct 2024 13: 58: 32 GMT",
+                        "soil_moisture": 30.0, "temperature": 19.8}
+        plant_data_3 = {"plant_id": 3, "recording_taken": "2024-10-03 12:56:48",
+                        "last_watered": "Wed, 02 Oct 2024 13: 55: 32 GMT",
+                        "soil_moisture": 29.0, "temperature": 22.4}
 
         fake_build_entry.side_effect = [
-            {"plant_id": 1, "recording_taken": "2024-10-01", "soil_moisture": 30.0},
-            {"plant_id": 2, "recording_taken": "2024-10-01", "soil_moisture": 45.0},
-            {"plant_id": 3, "recording_taken": "2024-10-01", "soil_moisture": 25.0},
+            {"plant_id": 1, "recording_taken": "2024-10-03 12:43:48",
+             "last_watered": "Wed, 02 Oct 2024 13: 54: 32 GMT",
+             "soil_moisture": 30.0, "temperature": 20.0},
+            {"plant_id": 2, "recording_taken": "2024-10-03 12:42:48",
+             "last_watered": "Wed, 02 Oct 2024 13: 58: 32 GMT",
+             "soil_moisture": 30.0, "temperature": 19.8},
+            {"plant_id": 3, "recording_taken": "2024-10-03 12:56:48",
+             "last_watered": "Wed, 02 Oct 2024 13: 55: 32 GMT",
+             "soil_moisture": 29.0, "temperature": 22.4},
         ]
 
         fake_executor.return_value.__enter__.return_value = fake_executor
@@ -125,9 +138,15 @@ class TestExtractFunction(TestCase):
         result_df = extract()
 
         expected_df = pd.DataFrame([
-            {"plant_id": 1, "recording_taken": "2024-10-01", "soil_moisture": 30.0},
-            {"plant_id": 2, "recording_taken": "2024-10-01", "soil_moisture": 45.0},
-            {"plant_id": 3, "recording_taken": "2024-10-01", "soil_moisture": 25.0}
+            {"plant_id": 1, "recording_taken": "2024-10-03 12:43:48",
+             "last_watered": "Wed, 02 Oct 2024 13: 54: 32 GMT",
+             "soil_moisture": 30.0, "temperature": 20.0},
+            {"plant_id": 2, "recording_taken": "2024-10-03 12:42:48",
+             "last_watered": "Wed, 02 Oct 2024 13: 58: 32 GMT",
+             "soil_moisture": 30.0, "temperature": 19.8},
+            {"plant_id": 3, "recording_taken": "2024-10-03 12:56:48",
+             "last_watered": "Wed, 02 Oct 2024 13: 55: 32 GMT",
+             "soil_moisture": 29.0, "temperature": 22.4}
         ]).sort_values("plant_id").reset_index(drop=True)
 
         pd.testing.assert_frame_equal(result_df, expected_df)
@@ -138,18 +157,20 @@ class TestExtractFunction(TestCase):
     def test_extract_with_error_handling(self, fake_executor, fake_as_completed, fake_get_request):
         """Tests that the extract function works as intended if one of the plants has an error."""
         fake_get_request.side_effect = [{"error": "Plant not found"},
-                                        {"plant_id": 1, "recording_taken": "2024-10-01",
-                                         "soil_moisture": 30.0},]
+                                        {"plant_id": 1, "recording_taken": "2024-10-03 12:43:48",
+                                         "last_watered": "Wed, 02 Oct 2024 13: 54: 32 GMT",
+                                         "soil_moisture": 30.0, "temperature": 20.0},]
 
         fake_executor.return_value.__enter__.return_value = fake_executor
 
-        future1 = Mock(spec=Future)
+        future1 = MagicMock(spec=Future)
         future1.result.return_value = {"error": "Plant not found"}
 
-        future2 = Mock(spec=Future)
+        future2 = MagicMock(spec=Future)
         future2.result.return_value = {
             "plant_id": 1, "recording_taken": "2024-10-03 12:43:48",
-            "last_watered": "Wed, 02 Oct 2024 13: 54: 32 GMT", "soil_moisture": 30.0, "temperature": 20.0}
+            "last_watered": "Wed, 02 Oct 2024 13: 54: 32 GMT",
+            "soil_moisture": 30.0, "temperature": 20.0}
 
         fake_as_completed.return_value = [future1, future2]
 
@@ -157,7 +178,8 @@ class TestExtractFunction(TestCase):
 
         expected_df = pd.DataFrame([
             {"plant_id": 1, "recording_taken": "2024-10-03 12:43:48",
-                "last_watered": "Wed, 02 Oct 2024 13: 54: 32 GMT", "soil_moisture": 30.0, "temperature": 20.0}
+                "last_watered": "Wed, 02 Oct 2024 13: 54: 32 GMT",
+                "soil_moisture": 30.0, "temperature": 20.0}
         ]).sort_values("plant_id").reset_index(drop=True)
 
         print(result_df)
