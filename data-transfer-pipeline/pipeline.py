@@ -3,7 +3,7 @@ from time import perf_counter
 
 from extract import extract_recordings
 from load import load_to_s3
-from clean import delete_outdataed_recordings
+from clean import delete_outdataed_recordings, process_and_update_averages
 
 
 def full_pipeline():
@@ -12,6 +12,7 @@ def full_pipeline():
     recordings = extract_recordings()
     load_to_s3(recordings)
     delete_outdataed_recordings()
+    process_and_update_averages(recordings)
     end = perf_counter()
     print("Pipeline complete.")
     print(end - start)
