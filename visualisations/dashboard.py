@@ -1,7 +1,7 @@
 """Streamlit dashboard."""
-from dotenv import load_dotenv
 from os import environ as ENV
 
+from dotenv import load_dotenv
 import streamlit as st
 import altair as alt
 import pandas as pd
@@ -109,6 +109,7 @@ def create_soil_moisture_avg_chart(plant_data: pd.DataFrame, row: pd.Series) -> 
 
 
 def display_dashboard():
+    """Displays the dashboard."""
     st.title("Plant Recordings Dashboard")
 
     conn = create_connection()
