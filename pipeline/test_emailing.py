@@ -48,6 +48,7 @@ class TestEmailingFunction(TestCase):
         self.assertIn('75.0°C', html_output)
         self.assertIn('higher', html_output)
 
+    @patch.dict('os.environ', {'SCHEMA_NAME': 'fake_schema'})
     @patch('emailing.create_connection')
     def test_get_botanist_info(self, fake_create_connection):
         """Test that get_botanist_info returns correct data from the database."""
