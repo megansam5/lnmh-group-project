@@ -4,4 +4,5 @@ pandas
 requests
 python-dotenv
 pymssql
+boto3
 pytest-cov

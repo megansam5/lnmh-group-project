@@ -8,12 +8,9 @@ import pymssql
 from dotenv import load_dotenv
 
 
-from extract import extract
-from transform import transform
-
-
 def create_connection():
     """Returns a connection to connect to the database. """
+    load_dotenv()
     return pymssql.connect(
         server=ENV['DB_HOST'],
         database=ENV['DB_NAME'],
@@ -46,5 +43,4 @@ def load(recordings: pd.DataFrame) -> None:
 
 
 if __name__ == '__main__':
-    load_dotenv()
-    load(transform(extract()))
+    pass

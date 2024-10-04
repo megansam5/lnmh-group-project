@@ -11,7 +11,7 @@ BASE_URL = "https://data-eng-plants-api.herokuapp.com/plants/"
 
 def get_request(plant_id) -> dict:
     """Gets and returns the data for a specific plant ."""
-    result = requests.get(f"{BASE_URL}{plant_id}", timeout=10)
+    result = requests.get(f"{BASE_URL}{plant_id}", timeout=30)
     return result.json()
 
 

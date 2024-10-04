@@ -4,7 +4,7 @@ This terraforming creates the lambda for the ETL pipeline, the eventbridge sched
 
 ## Set-up
 
-YOu need to create a `terraform.tfvars` file which includes the following:
+You need to create a `terraform.tfvars` file which includes the following:
 ```
 AWS_ACCESS_KEY = "XXX"
 AWS_SECRET_KEY = "XX"
