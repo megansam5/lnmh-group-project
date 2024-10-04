@@ -55,9 +55,9 @@ def generate_html(plant_id: int, value: float, value_type: str, condition:str) -
     else:
         unit = '%'
 
-    if condition == 'exceeded':
+    if condition.strip() == 'exceeded':
         implication = 'higher'
-    else:
+    elif condition.strip() == 'not met':
         implication = 'lower'
 
     value = round(value, 2)
@@ -139,14 +139,16 @@ if __name__ == "__main__":
     # Test cases, simulating emails being sent when 
     # upper and lower boundaries are exceeded
 
-    # Soil moisture exceed upper bound of 90. 
-    send_email(13, 95.2, 'soil moisture', 'exceeded')
+    # # Soil moisture exceed upper bound of 90. 
+    # send_email(13, 95.2, 'soil moisture', 'exceeded')
 
-    # Soil moisture doesn't meet lower bound of 30. 
-    send_email(13, 12.6, 'soil moisture', 'not met')
+    # # Soil moisture doesn't meet lower bound of 30. 
+    # send_email(13, 12.6, 'soil moisture', 'not met')
 
     # Temperature exceeds upper bound of 50.
-    send_email(13, 51, 'temperature', 'exceeded')
 
-    # Temperature exceeds lower bound of 5.
-    send_email(13, 2, 'temperature', 'not met')
+
+    send_email(13, 55, 'temperature', 'exceeded')
+
+    # # Temperature exceeds lower bound of 5.
+    # send_email(13, 2, 'temperature', 'not met')
