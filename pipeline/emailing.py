@@ -16,7 +16,7 @@ def send_email(plant_id: int, value: float, value_type: str) -> None:
     html = generate_html(plant_id, value, value_type)
     client = boto3.client("ses", region_name="eu-west-2")
     message = MIMEMultipart()
-    message["Subject"] = "Plant ALERT!"
+    message["Subject"] = f"Plant {plant_id} Alert!"
     body = MIMEText(
         html,
         "html")
@@ -116,4 +116,4 @@ def get_botanist_info(plant_id: int):
 
 if __name__ == "__main__":
 
-    send_email(13, 12.6, 'soil moisture')
+    send_email(13, 76.2, 'temperature')
