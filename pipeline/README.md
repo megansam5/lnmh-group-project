@@ -36,19 +36,19 @@ cleans and processes the data for upload and them uploads the data to the rds.
 You will nee a .env file with the following structure.
 
 ```
-AWS_ACCESS_KEY=x
-AWS_SECRET_ACCESS_KEY=x
-DB_HOST=x
-DB_PORT=x
-DB_NAME=x
-DB_USER=x
-DB_PASSWORD=x
-SCHEMA_NAME=x
-FROM_EMAIL=x
-TO_EMAIL1=x
-TO_EMAIL2=x
-TO_EMAIL3=x
-TO_EMAIL4=x
+AWS_ACCESS_KEY=xxxxxxxxxxxxxxx
+AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxx
+DB_HOST=xxxxxxxxxxxxxxxx
+DB_PORT=xxxxxxxxxxxxxxxx
+DB_NAME=xxxxxxxxxxxxxxxx
+DB_USER=xxxxxxxxxxxxxxxx
+DB_PASSWORD=xxxxxxxxxxxxxxxx
+SCHEMA_NAME=xxxxxxxxxxxxxxxx
+FROM_EMAIL=xxxxxxxxxxxxxxxx
+TO_EMAIL1=xxxxxxxxxxxxxxxx
+TO_EMAIL2=xxxxxxxxxxxxxxxx
+TO_EMAIL3=xxxxxxxxxxxxxxxx
+TO_EMAIL4=xxxxxxxxxxxxxxxx
 ```
 
 ### Local 
