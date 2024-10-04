@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS alpha.plant_average ; 
 DROP TABLE IF EXISTS alpha.recording;
 DROP TABLE IF EXISTS alpha.plant;
 DROP TABLE IF EXISTS alpha.botanist;

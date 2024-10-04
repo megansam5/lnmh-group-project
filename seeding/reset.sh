@@ -6,4 +6,4 @@ REPO_ROOT="$(git rev-parse --show-toplevel)"
 source "$REPO_ROOT/pipeline/.env"
 # A certificate is needed for secure connection without an error, '-C' works for now, 
 # but in commercial development environments you would need to download a certificate apparently.
-sqlcmd -S $DB_HOST,$DB_PORT -U $DB_USER -P $DB_PASSWORD -d $DB_NAME -i 'seeding/schema.sql' -C
+sqlcmd -S $DB_HOST,$DB_PORT -U $DB_USER -P $DB_PASSWORD -d $DB_NAME -i 'schema.sql' -C
