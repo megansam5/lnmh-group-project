@@ -31,4 +31,4 @@ DB_PASSWORD=XXX
 
 This image shows the entity relationship diagram for the database created in `schema.sql`
 
-![ERD](assets/ERD.png)
+![ERD](../assets/drawSQL-image-export-2024-10-04.png)
