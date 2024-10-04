@@ -27,7 +27,8 @@ The scripts within this directory named below are run chronologically as listed.
 - **Files**:
   - `extract.py`: Takes plant data from the provided LMNH plant API with multi-threading and returns a DataFrame.
   - `transform.py`: Takes in the DataFrame from extract.py, returning a formatted DataFrame controlled for types.
-  - `load.py`: This script cleans the ingested data and prepares it for storage.
+  - `load.py`: Connects to the LMNH botanical MS SQL Server database, and commits the transformed DataFrame.
+  - `emailing.py`Automatically send an alert email to the botanist if a plant's temperature or soil moisture levels found in the committed plant data are outside the acceptable range.
 
 
 
