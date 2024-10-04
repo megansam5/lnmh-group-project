@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from os import environ as ENV
 
 import pandas as pd
-
 from dotenv import load_dotenv
 import pymssql
 

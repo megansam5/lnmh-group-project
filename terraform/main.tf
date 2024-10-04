@@ -33,8 +33,7 @@ data "aws_iam_policy_document" "lambda_permissions_policy" {
 
     actions = [
       "rds:DescribeDBInstances",
-      "rds:Connect",
-      "Some other requirements"
+      "rds:Connect"
     ]
 
     resources = ["*"] 
@@ -60,14 +59,18 @@ resource "aws_lambda_function" "pipeline_lambda" {
   role          = aws_iam_role.iam_for_lambda.arn
 
   package_type = "Image"
-  timeout = 30
+  timeout = 900
   memory_size = 512
 
   image_uri = data.aws_ecr_image.pipeline_image.image_uri
 
   environment {
     variables = {
-      # Needed values for lambda 
+      DB_HOST=var.DB_HOST
+      DB_NAME= var.DB_NAME
+      DB_USER=var.DB_USER
+      DB_PASSWORD=var.DB_PASSWORD
+      DB_PORT=1433
     }
   }
 }
@@ -98,7 +101,7 @@ data  "aws_iam_policy_document" "min-schedule-permissions-policy" {
                 aws_lambda_function.pipeline_lambda.arn
             ]
         actions = [
-            "lambda:Invoke"
+            "lambda:InvokeFunction"
         ]
     }
 
@@ -176,12 +179,36 @@ resource "aws_ecs_task_definition" "data-transfer-task-definition" {
       ]
       environment = [
         {
-            name="EXAMPLE1"
-            value="EXAMPLEVALUE1"
+            name="AWS_ACCESS_KEY"
+            value=var.AWS_ACCESS_KEY
         },
         {
-            name="EXAMPLE2"
-            value="EXAMPLEVALUE2"
+            name="AWS_SECRET_KEY"
+            value=var.AWS_SECRET_KEY
+        },
+        {
+            name="DB_NAME"
+            value=var.DB_NAME
+        },
+        {
+            name="DB_HOST"
+            value=var.DB_HOST
+        },
+        {
+            name="DB_USER"
+            value=var.DB_USER
+        },
+        {
+            name="DB_PASSWORD"
+            value=var.DB_PASSWORD
+        },
+        {
+            name="BUCKET_NAME"
+            value=var.BUCKET_NAME
+        },
+        {
+            name="SCHEMA_NAME"
+            value=var.SCHEMA_NAME
         }
       ]
       logConfiguration = {
@@ -284,7 +311,7 @@ resource "aws_scheduler_schedule" "daily-schedule" {
     flexible_time_window {
       mode = "OFF"
     }
-    schedule_expression = "cron(0 9 * * ? *)"
+    schedule_expression = "cron(0 8 * * ? *)"
     schedule_expression_timezone = "UTC+1"
 
     target {
@@ -306,7 +333,7 @@ resource "aws_scheduler_schedule" "daily-schedule" {
 
 # ECR with dashboard image
 data "aws_ecr_image" "dashboard_image" {
-  repository_name = "c13-dog-botany-dashboard"
+  repository_name = "c13-dog-dashboard-task-def"
   image_tag       = "latest"
 }
 
@@ -379,7 +406,7 @@ resource "aws_ecs_service" "dashboard_service" {
 
 # For long term storage
 
-resource "aws_s3_bucket" "botany_long_term" {
+resource "aws_s3_bucket" "botany_bucket" {
   bucket = "c13-dog-botany-long-term"
   force_destroy = true
 }

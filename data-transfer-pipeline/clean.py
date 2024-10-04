@@ -1,11 +1,9 @@
 """A script to remove out of date data from the RDS."""
-import pymssql
 from typing import Tuple, Optional
-import pandas as pd
 from datetime import datetime, timedelta
 from os import environ as ENV
 
-
+import pandas as pd
 from dotenv import load_dotenv
 
 from extract import create_connection
@@ -28,7 +26,7 @@ def delete_outdataed_recordings() -> None:
     print("Old recordings deleted")
 
 
-def fetch_current_averages(conn: pymssql.Connection, plant_id: int) -> Optional[Tuple[float, float, int]]:
+def fetch_current_averages(conn, plant_id: int) -> Optional[Tuple[float, float, int]]:
     """
     Fetch the current average temperature, soil moisture, and recording count for a specific plant.
     """
@@ -43,7 +41,7 @@ def fetch_current_averages(conn: pymssql.Connection, plant_id: int) -> Optional[
     return data
 
 
-def update_plant_average(conn: pymssql.Connection, plant_id: int, avg_temp: float, avg_soil_moisture: float, recordings: int) -> None:
+def update_plant_average(conn, plant_id: int, avg_temp: float, avg_soil_moisture: float, recordings: int) -> None:
     """
     Updates the average temperature, soil moisture, and recording count for a specific plant.
     """
@@ -56,7 +54,7 @@ def update_plant_average(conn: pymssql.Connection, plant_id: int, avg_temp: floa
     conn.commit()
 
 
-def insert_new_plant_average(conn: pymssql.Connection, plant_id: int, avg_temp: float, avg_soil_moisture: float, recordings: int) -> None:
+def insert_new_plant_average(conn, plant_id: int, avg_temp: float, avg_soil_moisture: float, recordings: int) -> None:
     """
     Inserts a new record for the plant with its average temperature, soil moisture, and recording count.
     """

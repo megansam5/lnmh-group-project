@@ -39,3 +39,11 @@ variable "DB_USER" {
 variable "DB_NAME" {
   type = string
 }
+
+variable "SCHEMA_NAME" {
+  type = string
+}
+
+variable "BUCKET_NAME" {
+  type = string
+}
