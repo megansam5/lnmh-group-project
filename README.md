@@ -8,9 +8,10 @@ The Liverpool Natural History Museum has recently opened a botanical garden wing
 
 To make effective use of the sensor data, we propose the following solutions:
 
-1. **Data Pipeline**: A cloud-hosted data pipeline sourcing and transforming incoming data, later loading it to an RDS. The pipeline is also responsible for sending emails to the botanist in charge of a specific plan, in the even of an anomalous recording (temperature, soil  moisture).
-2. **Short-Term and Long-Term Storage**: Solutions for storing data for real-time and historical analysis.
-3. **Data Visualisation Dashboard**: A dashboard to display plant health information to stakeholders, in the moment and dynamically over time.
+- **Data Pipeline**: A cloud-hosted pipeline for data collection and processing, sending emails for anomalous recordings.
+- **Short-term Storage Solution**: Stores data from the past 24 hours for real-time insights.
+- **Long-term Storage Solution**: Retains data older than 24 hours for historical analysis.
+- **Data Visualisation Dashboard**: A dashboard for stakeholders to visualise and understand plant health data.
 
 With the described functionality, the LMNH will be able to monitor the health of plants and make informed decisions for the wellbeing of individual plants.
 <br><br>
@@ -40,11 +41,13 @@ The scripts within this directory named below are run chronologically as listed.
     <br><br>
   - `emailing.py`: Automatically sends an alert email to the botanist if a plant's temperature or soil moisture levels found in the committed plant data are outside the acceptable range. Emails will outline an anomaly for a given plant recording, whether an upper or lower bound has been breached, what the plant ID is, and the botanist in charge of it.
     <br><br>
+
     #### Figure 3: Example anomaly emails for upper and lower plant temperature boundary conditions:
 
     <img src="assets/temp_high.png" alt="High Temperature Alert" width="360"/>
     <img src="assets/temp_low.png" alt="Low Temperature Alert" width="360"/>
     <br><br>
+    
     #### Figure 4: Example anomaly emails for upper and lower plant soil moisture boundary conditions:
 
     <img src="assets/moisture_high.png" alt="High Moisture Alert" width="360"/>
@@ -52,7 +55,7 @@ The scripts within this directory named below are run chronologically as listed.
 
 
 
-    <br><br>
+    <br>
 ### 2. `seeding/`
 
 **Description**: This directory contains the shell and .sql script(s) needed to connect to the RDS instance containing LMNH plant data remotely, and reset the database by dropped all tables in the event a wipe is necessary. The provided sql script can then be used to restore table structure and seed data.
@@ -63,7 +66,7 @@ The scripts within this directory named below are run chronologically as listed.
   - `reset.sh`: Uses the above 'schema.sql' script to first drop all tables, and then re-create all tables and re-insert seed data.
 
 
-    <br><br>
+    <br>
   ### 3. `terraform/`
 
 **Description**: This directory contains the .tf files necessary for Terraform to automatically build the AWS cloud infrastructure that our data pipeline interacts with to store our data, send emails, and all other core aspects of this project's functionality.
@@ -72,7 +75,7 @@ The scripts within this directory named below are run chronologically as listed.
   - `main.tf`: Contains the instructions of exactly what and how to build the AWS resources needed for this project.
   - `variables.tf`: Contains the construction variables used to parameterise and configure AWS services being built.
 
-    <br><br>
+    <br>
   ### 4. `visualisation/`
 
 **Description**:
@@ -85,3 +88,19 @@ The scripts within this directory named below are run chronologically as listed.
 
     #### Figure 6: Visual presenting additional information about a select plant, with a picture to the left of easy identification.
     <img src="assets/plant_info.png" alt="Data Visualisation" width="450"/>
+
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.11+
+- Terraform
+- AWS CLI
+
+### Installation
+
+1. **Clone the Repository**:
+   ```sh
+   git clone https://github.com/megansam5/lnmh-group-project.git
+   cd lnmh-group-project
