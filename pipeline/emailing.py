@@ -20,6 +20,7 @@ def send_email(plant_id: int, value: float, value_type: str, condition:str ) -> 
     html = generate_html(plant_id, value, value_type, condition)
     client = boto3.client("ses", region_name="eu-west-2")
     message = MIMEMultipart()
+    
     message["Subject"] = f"PLANT ALERT! ACCEPTABLE {value_type.upper()} LEVEL {condition.upper()}"
     body = MIMEText(
         html,
@@ -138,7 +139,6 @@ def get_botanist_info(plant_id: int):
 
 
 if __name__ == "__main__":
-
     # Test cases, simulating emails being sent when 
     # upper and lower boundaries are exceeded
 

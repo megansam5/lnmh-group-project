@@ -47,3 +47,7 @@ variable "SCHEMA_NAME" {
 variable "BUCKET_NAME" {
   type = string
 }
+
+variable "VPC_ID" {
+  type = string
+}
