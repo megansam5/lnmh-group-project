@@ -81,6 +81,8 @@ resource "aws_lambda_function" "pipeline_lambda" {
       DB_USER=var.DB_USER
       DB_PASSWORD=var.DB_PASSWORD
       DB_PORT=1433
+      FROM_EMAIL=var.FROM_EMAIL
+      TO_EMAIL=var.TO_EMAIL
     }
   }
 }

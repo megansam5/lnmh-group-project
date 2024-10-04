@@ -1,5 +1,7 @@
 # Terraforming
 
+## Overview
+
 This terraforming creates all the required AWS services, except the ECRs, for this project. This includes the lambda for the ETL pipeline, the eventbridge scheduler to run this every minute, the ECS Task definition to run the ECS Task to move the data from short term to long term, and its eventbridge scheduler every 24 hours, the task definition for the ECS service for the dashboard, along with all the necessary permissions and security groups.
 
 ## Set-up and Running
@@ -18,12 +20,20 @@ DB_NAME = "XXX"
 BUCKET_NAME = "XXX"
 SCHEMA_NAME = "XXX"
 VPC_ID = "XXX"
+FROM_EMAIL = "XXX"
+TO_EMAIL = "XXX
 ```
 
-Before running this terraform script, you need to go into the `data-transfer-pipeline`, `pipeline`, and `visualisations` folders and follow the instructions to `Deploy`, which involves making the ECRs containing the Docker images.
+Before running this terraform script, you need to go into the [data-transfer-pipeline](../data-transfer-pipeline), [pipeline](../pipeline), and [visualisations](../visualisations) folders and follow the instructions for `Deploying to the Cloud`, which involves making the ECRs containing the Docker images.
 
 To run first check with `terraform plan`.
 
 Then run with `terraform apply`.
 
 After use, destroy with `terraform destroy`. (The 3 ECRs will have to be manually deleted on the AWS UI.)
+
+## Architecture Diagram
+
+This image shows the architecture diagram for this project.
+
+<img src="../assets/lmnh_botany_data_architecture.png" alt="Data Visualisation" width="600"/>

@@ -15,15 +15,15 @@ This has three main stages:
 - `load.py`: Handles loading the extracted data to S3.
 - `clean.py`: Cleans old data from the RDS and updates the plant_average table.
 - `pipeline.py`: Main script to run the full ETL pipeline.
-- `Dockerfile`: Allows the pipeline to be dockerised.              
+- `Dockerfile`: Docker file to build an image of the pipeline.             
+- `requirements.txt`: The requirements for running this pipeline.
+- `connect.sh`: A quick shell script to connect to the database.
 - `test_extract.py`: Tests for the extract functionality.
 - `test_load.py`: Tests for the load functionality.
 - `test_clean.py`: Tests for the clean functionality.
 - `test_pipeline.py`: Tests for the whole pipeline.
-- `requirements.txt`: The requirements for running this pipeline.
-- `connect.sh`: A quick shell script to connect to the database.
 
-## Set-up and running locally.
+## Set-up and Running Locally
 
 1. Create a virtual environment.
 2. Install dependencies by running `pip install -r requirements.txt`
@@ -49,14 +49,19 @@ SCHEMA_NAME=XXX
 ```
 5. Run the pipeline with `python3 pipeline.py`.
 
-## Deploying
+## As a Docker Container Locally
+
+- Build the Image with `docker build -t pipeline-image .`
+- Run a Container with `docker run --env-file .env pipeline-image .`
+
+## Deploying to the Cloud
 
 To deploy the pipeline:
-- Authenticate docker with `aws ecr get-login-password --region YOUR_AWS_REGION | docker login --username AWS --password-stdin YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com`
+- Authenticate docker with `aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com`
 - Create an ECR repository with `aws ecr create-repository --repository-name c13-dog-data-transfer --region eu-west-2`
 - Build the image with the correct platform with `docker build -t c13-dog-data-transfer . --platform "linux/amd64"`
 - Tag the image with `docker tag c13-dog-data-transfer:latest YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com/c13-dog-data-transfer:latest`
 - Push the image to the ECR with `docker push YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com/c13-dog-data-transfer:latest`
 
-And then move into the `terraform` folder to create the task definition.
+And then move into the [terraform directory](../terraform) to create the task definition.
 
