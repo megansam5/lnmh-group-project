@@ -10,18 +10,25 @@ import boto3
 from load import create_connection
 
 
-def send_email(plant_id: int, value: float, value_type: str) -> None:
-    """Sends an email to the correct botanist if the plants conditions are worrying."""
+def send_email(plant_id: int, value: float, value_type: str, condition:str ) -> None:
+    """
+    Sends an email to the correct botanist if the plants conditions are worrying.
+    Example inputs - plant_id: 1, value: 10000, value_type: 'temperature', condition: 'exceeded'.
+    """
+
     load_dotenv()
-    html = generate_html(plant_id, value, value_type)
+    html = generate_html(plant_id, value, value_type, condition)
     client = boto3.client("ses", region_name="eu-west-2")
     message = MIMEMultipart()
-    message["Subject"] = f"Plant {plant_id} Alert!"
+    
+    message["Subject"] = f"PLANT ALERT! ACCEPTABLE {value_type.upper()} LEVEL {condition.upper()}"
     body = MIMEText(
         html,
         "html")
     message.attach(body)
 
+    # The addresses the emails will be sent, 
+    # should be specified in your local env variables.
     client.send_raw_email(
         Source=ENV['FROM_EMAIL'],
         Destinations=[
@@ -36,8 +43,12 @@ def send_email(plant_id: int, value: float, value_type: str) -> None:
     )
 
 
-def generate_html(plant_id: int, value: float, value_type: str) -> str:
-    """Generates the html report to email."""
+def generate_html(plant_id: int, value: float, value_type: str, condition:str) -> str:
+    """
+    Generates the html report to email.
+    Example inputs - plant_id: 1, value: 10000, value_type: 'temperature', condition: 'exceeded'.
+    """
+
     extra_info = get_botanist_info(plant_id)
     botanist_name = extra_info['botanist_name']
     botanist_email = extra_info['botanist_email']
@@ -46,7 +57,19 @@ def generate_html(plant_id: int, value: float, value_type: str) -> str:
         unit = '°C'
     else:
         unit = '%'
+
+    if condition == 'exceeded':
+        implication = 'higher'
+    else:
+        implication = 'lower'
+
     value = round(value, 2)
+
+    # 'soil moisture' is a string of two items, so in order to capitalise 
+    # in this case, it's necessary to split the items in to a list, iterate
+    # over it to and capitalise, then join the list into a final string.
+    capitalised_value_type = ' '.join(word.capitalize() for word in value_type.split())
+
     html_content = f"""
     <html>
     <head>
@@ -77,11 +100,12 @@ def generate_html(plant_id: int, value: float, value_type: str) -> str:
     </head>
     <body>
         <div class="container">
-            <h2>Automated Botany Alert</h2>
+            <h2>Automated Botany Alert: Acceptable {capitalised_value_type} Range {condition.capitalize()}</h2>
             <p>Dear {botanist_name} ({botanist_email}),</p>
             <p>
                 This is an automated email to inform you that the {value_type} for the plant
-                <strong>{plant_name}</strong> with the ID <strong>{plant_id}</strong> has recorded a value of <strong>{value}{unit}</strong>.
+                <strong>{plant_name}</strong> with the ID <strong>{plant_id}</strong> has recorded a value of <strong>{value}{unit}</strong>, 
+                which is <strong>{implication}</strong> than what we expect on our system.
             </p>
             <p>Kind regards,</p>
             <p>The Botany Team</p>
@@ -115,5 +139,17 @@ def get_botanist_info(plant_id: int):
 
 
 if __name__ == "__main__":
+    # Test cases, simulating emails being sent when 
+    # upper and lower boundaries are exceeded
 
-    send_email(13, 76.2, 'temperature')
+    # Soil moisture exceed upper bound of 90. 
+    send_email(13, 95.2, 'soil moisture', 'exceeded')
+
+    # # Soil moisture doesn't meet lower bound of 30. 
+    # send_email(13, 12, 'soil moisture', 'not met')
+
+    # # Temperature exceeds upper bound of 50.
+    # send_email(13, 55, 'temperature', 'exceeds')
+
+    # # Temperature exceeds lower bound of 5.
+    # send_email(13, 2, 'temperature', 'not met')
