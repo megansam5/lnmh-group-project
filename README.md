@@ -8,7 +8,7 @@ The Liverpool Natural History Museum has recently opened a botanical garden wing
 
 To make effective use of the sensor data, we propose the following solutions:
 
-1. **Data Pipeline**: A cloud-hosted data pipeline sourcing and transforming incoming data, later loading it to an RDS.
+1. **Data Pipeline**: A cloud-hosted data pipeline sourcing and transforming incoming data, later loading it to an RDS. The pipeline is also responsible for sending emails to the botanist in charge of a specific plan, in the even of an anomalous recording (temperature, soil  moisture).
 2. **Short-Term and Long-Term Storage**: Solutions for storing data for real-time and historical analysis.
 3. **Data Visualisation Dashboard**: A dashboard to display plant health information to stakeholders, in the moment and dynamically over time.
 
@@ -55,22 +55,22 @@ The scripts within this directory named below are run chronologically as listed.
     <br><br>
 ### 2. `seeding/`
 
-**Description**:
+**Description**: This directory contains the shell and .sql script(s) needed to connect to the RDS instance containing LMNH plant data remotely, and reset the database by dropped all tables in the event a wipe is necessary. The provided sql script can then be used to restore table structure and seed data.
 
 - **Files**:
   - `connect.sh`: Connects to the remote RDS instance, where LMNH's plant data is being stored and constantly updated.
   - `schema.sql`: Defines the structure of all tables in the RDS, following the ERD and seeding the mapping tables 'plant', 'botanist' and 'location'. 
   - `reset.sh`: Uses the above 'schema.sql' script to first drop all tables, and then re-create all tables and re-insert seed data.
 
+
     <br><br>
   ### 3. `terraform/`
 
-**Description**:
+**Description**: This directory contains the .tf files necessary for Terraform to automatically build the AWS cloud infrastructure that our data pipeline interacts with to store our data, send emails, and all other core aspects of this project's functionality.
 
 - **Files**:
-  - `main.tf`:
-  - `variables.tf`: 
-  - `schema.sql`: 
+  - `main.tf`: Contains the instructions of exactly what and how to build the AWS resources needed for this project.
+  - `variables.tf`: Contains the construction variables used to parameterise and configure AWS services being built.
 
     <br><br>
   ### 4. `visualisation/`
