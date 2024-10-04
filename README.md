@@ -64,7 +64,7 @@ The scripts within this directory named below are run chronologically as listed.
   - `reset.sh`: Uses the above 'schema.sql' script to first drop all tables, and then re-create all tables and re-insert seed data.
 
 
-  ### 3. `terraform/`
+### 3. `terraform/`
 
 **Description**: This directory contains the .tf files necessary for Terraform to automatically build the AWS cloud infrastructure that our data pipeline interacts with to store our data, send emails, and all other core aspects of this project's functionality.
 
@@ -72,7 +72,7 @@ The scripts within this directory named below are run chronologically as listed.
   - `main.tf`: Contains the instructions of exactly what and how to build the AWS resources needed for this project.
   - `variables.tf`: Contains the construction variables used to parameterise and configure AWS services being built.
 
-  ### 4. `visualisation/`
+### 4. `visualisation/`
 
 **Description**:
 
