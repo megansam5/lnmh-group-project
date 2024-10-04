@@ -40,12 +40,12 @@ The scripts within this directory named below are run chronologically as listed.
     <br><br>
   - `emailing.py`: Automatically sends an alert email to the botanist if a plant's temperature or soil moisture levels found in the committed plant data are outside the acceptable range. Emails will outline an anomaly for a given plant recording, whether an upper or lower bound has been breached, what the plant ID is, and the botanist in charge of it.
     <br><br>
-    Example anomaly emails for upper and lower plant temperature boundary conditions:
+    #### Figure 3: Example anomaly emails for upper and lower plant temperature boundary conditions:
 
     <img src="assets/temp_high.png" alt="High Temperature Alert" width="360"/>
     <img src="assets/temp_low.png" alt="Low Temperature Alert" width="360"/>
     <br><br>
-    Example anomaly emails for upper and lower plant soil moisture boundary conditions:
+    #### Figure 4: Example anomaly emails for upper and lower plant soil moisture boundary conditions:
 
     <img src="assets/moisture_high.png" alt="High Moisture Alert" width="360"/>
     <img src="assets/moisture_low.png" alt="Low Moisture Alert" width="360"/>
@@ -78,10 +78,10 @@ The scripts within this directory named below are run chronologically as listed.
 **Description**:
 
 - **Files**:
-  - `dashboard.py`:
+  - `dashboard.py`: Generates a Streamlit dashboard using Altair visualisations in Python. Allowing for temperature and soil moisture level recordings within the last 24 hours to be view in a clear manner, across all available plants. A measure of average value across all days is also available as a red line of best fit. Additional information regarding specific plants can also be found below, displaying scientific name, origin, and the information of the plant's linked botanist.
 
+    #### Figure 5: Line graphs on the LMNH plant dashboard, showing variations in temperature and soil moisture across a day.
+    <img src="assets/dashboard.png" alt="Data Visualisation" width="450"/>
 
-      <img src="assets/dashboard.png" alt="Data Visualisation" width="450"/>
-
-
+    #### Figure 6: Visual presenting additional information about a select plant, with a picture to the left of easy identification.
     <img src="assets/plant_info.png" alt="Data Visualisation" width="450"/>
