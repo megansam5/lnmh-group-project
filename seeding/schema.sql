@@ -106,10 +106,10 @@ INSERT INTO alpha.botanist (botanist_id, botanist_name, botanist_email, botanist
 (3, 'Eliza Andrews', 'eliza.andrews@lnhm.co.uk', '(846)669-6651x75948');
 
 INSERT INTO alpha.plant (plant_id, plant_name, scientific_name, image_url, location_id, botanist_id) VALUES
-(0, 'Golden Pothos', 'Epipremnum Aureum', 'https://perenual.com/storage/species_image/2773_epipremnum_aureum/og/2560px-Epipremnum_aureum_31082012.jpg', 1, 1),
+(0, 'Golden Pothos (a)', 'Epipremnum Aureum', 'https://perenual.com/storage/species_image/2773_epipremnum_aureum/og/2560px-Epipremnum_aureum_31082012.jpg', 1, 1),
 (1, 'Venus Flytrap', 'Dionaea Muscipula', 'https://perenual.com/storage/species_image/2498_dionaea_muscipula/og/2560px-Dionaea_muscipula2C_exhibition_in_Botanical_garden_Brno.jpg', 2, 2),
-(2, 'Corpse Flower', 'Amorphophallus Barteri', NULL, 3, 1),
-(3, 'Corpse Flower', 'Rafflesia Arnoldii', NULL, 1, 3),
+(2, 'Corpse Flower (a)', 'Amorphophallus Barteri', NULL, 3, 1),
+(3, 'Corpse Flower (b)', 'Rafflesia Arnoldii', NULL, 1, 3),
 (4, 'Black Bat Flower', 'Tacca Chantrieri', NULL, 4, 1),
 (5, 'Pitcher Plant', 'Sarracenia Catesbaei', 'https://perenual.com/storage/species_image/7190_sarracenia_catesbaei/og/Sarracenia_x_catesbaei_x_psittacina_Kapturnica_2014-06-19_01.jpg', 5, 1),
 (6, 'Wollemi Pine', 'Wollemia Nobilis', 'https://perenual.com/storage/species_image/8360_wollemia_nobilis/og/30129534108_43db758803_b.jpg', 6, 3),
@@ -154,4 +154,4 @@ INSERT INTO alpha.plant (plant_id, plant_name, scientific_name, image_url, locat
 (47, 'Powder Puff Tree', 'Calliandra Haematocephala', 'https://perenual.com/storage/species_image/1477_calliandra_haematocephala/og/52063600268_834ebc0538_b.jpg', 43, 3),
 (48, 'ZZ Plant', 'Zamioculcas Zamiifolia', 'https://perenual.com/storage/species_image/8386_zamioculcas_zamiifolia/og/24891577155_64934d420e_b.jpg', 44, 1),
 (49, 'Jade Plant', 'Crassula Ovata', 'https://perenual.com/storage/species_image/2193_crassula_ovata/og/33253726791_980c738a1e_b.jpg', 45, 3),
-(50, 'Golden Pothos', 'Epipremnum Aureum', 'https://perenual.com/storage/species_image/2773_epipremnum_aureum/og/2560px-Epipremnum_aureum_31082012.jpg', 1, 1);
+(50, 'Golden Pothos (b)', 'Epipremnum Aureum', 'https://perenual.com/storage/species_image/2773_epipremnum_aureum/og/2560px-Epipremnum_aureum_31082012.jpg', 1, 1);
