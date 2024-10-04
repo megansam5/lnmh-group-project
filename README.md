@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Liverpool Natural History Museum has recently opened a botanical garden wing that houses a variety of plants from around the world. Each plant has a corresponding sensor that monitors the health of the plant and uploads to an API endpoint. As it stands, nothing is being done with the data being sent to the API endpoints, so we propose the following: a full data pipeline hosted in the cloud, a short term database solution that can store the data for the past 24 hours, a long term storage solution for all data older than 24 hours, and lastly a dashboard to visualise the data. With these solutions implemented, the stakeholders will be able to view up to date information on each plant and their current/recent health, as well as see data on the plants from the long term storage solution. This will enable the stakeholders to more easily make decisions to benefit the plants.
+The Liverpool Natural History Museum (LMNH has recently opened a botanical garden wing that houses a variety of plants from around the world. Each plant has a corresponding sensor that monitors the health of the plant and uploads to an API endpoint. As it stands, nothing is being done with the data being sent to the API endpoints. LMNH has asked our team to create a data model for processing this data, accounting for more recent and older data and also a visual represenation of the data, that is easy to understand by those from a noh-tehnical background.
 
 ## Project Objectives
 
