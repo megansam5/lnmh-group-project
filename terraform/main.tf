@@ -397,6 +397,32 @@ resource "aws_ecs_task_definition" "dashboard_task_definition" {
     }])
 }
 
+data "aws_vpc" "c13-vpc" {
+  id = var.VPC_ID
+}
+
+resource "aws_security_group" "dashboard_security_group" {
+  name        = "c13-dog-dashboard-sg"
+  description = "Allow TCP traffic on port 8501"
+  vpc_id      = data.aws_vpc.c13-vpc.id
+
+  ingress {
+    description      = "Allow TCP traffic on port 8501"
+    from_port        = 8501
+    to_port          = 8501
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 # ECS Service for dashboard
 resource "aws_ecs_service" "dashboard_service" {
   name            = "c13-dog-botany-dashboard-service"
@@ -406,7 +432,7 @@ resource "aws_ecs_service" "dashboard_service" {
   launch_type     = "FARGATE"
   network_configuration {
     subnets          = [data.aws_subnet.c13-public-subnet.id]
-    security_groups  = [data.aws_security_group.c13-default-sg.id]
+    security_groups  = [aws_security_group.dashboard_security_group.id]
     assign_public_ip = true
   }
 }
