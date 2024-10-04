@@ -51,3 +51,11 @@ variable "BUCKET_NAME" {
 variable "VPC_ID" {
   type = string
 }
+
+variable "FROM_EMAIL" {
+  type = string
+}
+
+variable "TO_EMAIL" {
+  type = string
+}

@@ -8,8 +8,9 @@ This folder contains  streamlit dashboard to visualise the plants temperature an
 - `dashboard.py`: The main streamlit dashboard.
 - `Dockerfile`: Allows the dashboard to be dockerised. 
 - `requirements.txt`: The requirements for running this dashboard.
+- `test_dashboard.py`: Tests for the dashboard.
 
-## Set-up and running locally
+## Set-up and Running Locally
 
 1. Create a virtual environment.
 2. Install dependencies by running `pip install -r requirements.txt`
@@ -29,18 +30,30 @@ DB_NAME=XXX
 DB_USER=XXX
 DB_PASSWORD=XXX
 ```
-5. Build the dashboard with `docker build -t dashboard .`
-6. Run the dashboard with `docker run -it -p 8501:8501 --env-file .env dashboard`
+5. Run the dashboard with `streamlit run dashboard.py`.
 
-## Deploying
+## As a Docker Container Locally
+
+- Build the dashboard with `docker build -t dashboard .`
+- Run the dashboard with `docker run -it -p 8501:8501 --env-file .env dashboard`
+
+## Deploying to the Cloud
 
 To deploy the dashboard
 
 To deploy the pipeline:
-- Authenticate docker with `aws ecr get-login-password --region YOUR_AWS_REGION | docker login --username AWS --password-stdin YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com`
+- Authenticate docker with `aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com`
 - Create an ECR repository with `aws ecr create-repository --repository-name c13-dog-botany-dashboard --region eu-west-2`
 - Build the image with the correct platform with `docker build -t c13-dog-botany-dashboard . --platform "linux/amd64"`
 - Tag the image with `docker tag c13-dog-botany-dashboard:latest YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com/c13-dog-botany-dashboard:latest`
 - Push the image to the ECR with `docker push YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-west-2.amazonaws.com/c13-dog-botany-dashboard:latest`
 
-And then move into the `terraform` folder to create the task definition and service.
+And then move into the [terraform directory](../terraform) to create the task definition.
+
+## Dashboard Image
+
+These images show the dashboard in use.
+
+ <img src="../assets/dashboard.png" alt="Data Visualisation" width="450"/>
+
+   <img src="../assets/plant_info.png" alt="Data Visualisation" width="450"/>
