@@ -27,8 +27,8 @@ DB_PASSWORD=x
 ```
 
 3. Open the terminal and enter:
-    - `bash connect.sh` to start an interactive session with the AWS RDS.
-    - `bash reset.sh` to reset the database with the `schema.sql` file.
+    - ```bash connect.sh``` to start an interactive session with the AWS RDS.
+    - ```bash reset.sh``` to reset the database with the `schema.sql` file.
 
 ## ERD
 
