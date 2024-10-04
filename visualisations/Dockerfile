@@ -19,10 +19,6 @@ COPY requirements.txt .
 RUN pip install --pre --no-binary :all: pymssql==2.2.11 --no-cache-dir
 RUN pip install -r requirements.txt 
 
-COPY extract.py .
-COPY load.py .
-COPY clean.py .
-COPY pipeline.py .
+COPY dashboard.py .
 
-CMD ["python", "pipeline.py"]
-
+CMD ["streamlit", "run", "dashboard.py"]

@@ -1,6 +1,8 @@
+
 /venv
 venv
 .venv
+
 
 .terraform
 .terraform.lock.hcl
@@ -10,8 +12,11 @@ terraform.tfvars
 *.tfvars
 
 
+
+
 .env
 *.env
+
 
 __pycache__/
 __pycache__
