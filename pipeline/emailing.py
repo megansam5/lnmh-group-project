@@ -26,6 +26,8 @@ def send_email(plant_id: int, value: float, value_type: str, condition:str ) -> 
         "html")
     message.attach(body)
 
+    # The addresses the emails will be sent, 
+    # should be specified in your local env variables.
     client.send_raw_email(
         Source=ENV['FROM_EMAIL'],
         Destinations=[
