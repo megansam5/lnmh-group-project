@@ -101,7 +101,7 @@ data  "aws_iam_policy_document" "min-schedule-permissions-policy" {
                 aws_lambda_function.pipeline_lambda.arn
             ]
         actions = [
-            "lambda:Invoke"
+            "lambda:InvokeFunction"
         ]
     }
 
@@ -329,7 +329,85 @@ resource "aws_scheduler_schedule" "daily-schedule" {
     }
 }
 
+# DASHBOARD ECS TASK + SERVICE
+
+# ECR with dashboard image
+data "aws_ecr_image" "dashboard_image" {
+  repository_name = "c13-dog-dashboard-task-def"
+  image_tag       = "latest"
+}
+
+# Task definition
+resource "aws_ecs_task_definition" "dashboard_task_definition" {
+  family = "c13-dog-dashboard-task-def"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  execution_role_arn = data.aws_iam_role.iam_for_task_def.arn
+  cpu       = 512
+  memory    = 1024
+  container_definitions = jsonencode([
+    {
+      name      = "c13-dog-botany-dashboard"
+      image     = data.aws_ecr_image.dashboard_image.image_uri
+      essential = true
+      portMappings = [
+        {
+          containerPort = 8501
+          hostPort      = 8501
+        }
+      ]
+      environment = [
+        {
+            name="DB_NAME"
+            value=var.DB_NAME
+        },
+        {
+            name="DB_HOST"
+            value=var.DB_HOST
+        },
+        {
+            name="DB_USER"
+            value=var.DB_USER
+        },
+        {
+            name="DB_PASSWORD"
+            value=var.DB_PASSWORD
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = "/ecs/c13-dog-dashboard-task-def"
+          awslogs-stream-prefix = "ecs"
+          awslogs-region        = "eu-west-2"
+          mode                  = "non-blocking"
+          max-buffer-size       = "25m"
+        }
+      }
+    }])
+}
+
+# ECS Service for dashboard
+resource "aws_ecs_service" "dashboard_service" {
+  name            = "c13-dog-botany-dashboard-service"
+  cluster         = data.aws_ecs_cluster.c13-cluster.id
+  task_definition = aws_ecs_task_definition.dashboard_task_definition.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+  network_configuration {
+    subnets          = [data.aws_subnet.c13-public-subnet.id]
+    security_groups  = [data.aws_security_group.c13-default-sg.id]
+    assign_public_ip = true
+  }
+}
+
+
+# S3 BUCKET
+
+# For long term storage
+
 resource "aws_s3_bucket" "botany_bucket" {
   bucket = "c13-dog-botany-long-term"
+  force_destroy = true
 }
 
