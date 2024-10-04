@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 
 from extract import extract
+from emailing import send_email
 
 
 def transform(needs_a_clean: pd.DataFrame):
@@ -20,6 +21,12 @@ def transform(needs_a_clean: pd.DataFrame):
 
     needs_a_clean['recording_taken'] = needs_a_clean['recording_taken'].apply(
         lambda row: row.strftime("%Y-%m-%d %H:%M:%S"))
+
+    for index, row in needs_a_clean.iterrows():
+        if row['temperature'] > 50:
+            send_email(row['plant_id'], row['temperature'], 'temperature')
+        if row['soil_moisture'] < 30:
+            send_email(row['plant_id'], row['soil_moisture'], 'soil moisture')
 
     return needs_a_clean
 
