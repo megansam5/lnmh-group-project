@@ -8,9 +8,9 @@ The Liverpool Natural History Museum has recently opened a botanical garden wing
 
 To make effective use of the sensor data, we propose the following solutions:
 
-1. **Data Pipeline**: A cloud-hosted data pipeline to manage and process incoming data.
-2. **Short-Term and Long-Term Storage**: Solutions for storing data for real-time updated and historical analysis.
-3. **Data Visualisation Dashboard**: A dashboard to display plant health information to stakeholders.
+1. **Data Pipeline**: A cloud-hosted data pipeline sourcing and transforming incoming data, later loading it to an RDS.
+2. **Short-Term and Long-Term Storage**: Solutions for storing data for real-time and historical analysis.
+3. **Data Visualisation Dashboard**: A dashboard to display plant health information to stakeholders, in the moment and dynamically over time.
 
 With the described functionality, the LMNH will be able to monitor the health of plants and make informed decisions for the wellbeing of individual plants.
 <br><br>
@@ -37,19 +37,18 @@ The scripts within this directory named below are run chronologically as listed.
   - `load.py`: Connects to the LMNH botanical MS SQL Server database, and commits the transformed DataFrame to the 'recording' Table.
     #### Figure 2: ERD Diagram, illustrating the structure of our database storing plant data in 3NF. 
     <img src="assets/drawSQL-image-export-2024-10-04.png" alt="Data Visualisation" width="450"/>
-  
     <br><br>
   - `emailing.py`: Automatically sends an alert email to the botanist if a plant's temperature or soil moisture levels found in the committed plant data are outside the acceptable range. Emails will outline an anomaly for a given plant recording, whether an upper or lower bound has been breached, what the plant ID is, and the botanist in charge of it.
     <br><br>
     Example anomaly emails for upper and lower plant temperature boundary conditions:
 
-    <img src="assets/temp_high.png" alt="High Temperature Alert" width="400"/>
-    <img src="assets/temp_low.png" alt="Low Temperature Alert" width="400"/>
+    <img src="assets/temp_high.png" alt="High Temperature Alert" width="360"/>
+    <img src="assets/temp_low.png" alt="Low Temperature Alert" width="360"/>
     <br><br>
     Example anomaly emails for upper and lower plant soil moisture boundary conditions:
 
-    <img src="assets/moisture_high.png" alt="High Moisture Alert" width="400"/>
-    <img src="assets/moisture_low.png" alt="Low Moisture Alert" width="400"/>
+    <img src="assets/moisture_high.png" alt="High Moisture Alert" width="360"/>
+    <img src="assets/moisture_low.png" alt="Low Moisture Alert" width="360"/>
 
 
 
