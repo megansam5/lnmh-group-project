@@ -27,7 +27,7 @@ Below is a high-level description of the key components within each directory of
 <br>
 **Exact details on how to run scripts from each directory can be found in dedicated directory READMEs.**
 
-### 1. `pipeline/`
+### 1. [pipeline](pipeline)
 
 **Description**: This directory contains the data pipeline code responsible for processing sensor data. 
 The scripts within this directory named below are run chronologically as listed.
@@ -54,7 +54,7 @@ The scripts within this directory named below are run chronologically as listed.
     <img src="assets/moisture_low.png" alt="Low Moisture Alert" width="360"/>
 
     <br>
-### 2. `seeding/`
+### 2. [seeding](seeding)
 
 **Description**: This directory contains the shell and .sql script(s) needed to connect to the RDS instance containing LMNH plant data remotely, and reset the database by dropped all tables in the event a wipe is necessary. The provided sql script can then be used to restore table structure and seed data.
 
@@ -72,7 +72,7 @@ The scripts within this directory named below are run chronologically as listed.
   - `main.tf`: Contains the instructions of exactly what and how to build the AWS resources needed for this project.
   - `variables.tf`: Contains the construction variables used to parameterise and configure AWS services being built.
 
-### 4. `visualisation/`
+### 4. [visualisations](visualisations)
 
 **Description**:
 
