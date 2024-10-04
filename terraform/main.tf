@@ -343,7 +343,7 @@ resource "aws_scheduler_schedule" "daily-schedule" {
 
 # ECR with dashboard image
 data "aws_ecr_image" "dashboard_image" {
-  repository_name = "c13-dog-dashboard-task-def"
+  repository_name = "c13-dog-botany-dashboard"
   image_tag       = "latest"
 }
 
