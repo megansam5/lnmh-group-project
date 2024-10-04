@@ -21,7 +21,7 @@ def send_email(plant_id: int, value: float, value_type: str, condition:str ) -> 
     client = boto3.client("ses", region_name="eu-west-2")
     message = MIMEMultipart()
     
-    message["Subject"] = f"PLANT ALERT! ACCEPTABLE {value_type.upper()} LEVEL {condition.upper()}"
+    message["Subject"] = f"PLANT ALERT! {condition.upper()} ACCEPTABLE {value_type.upper()} LEVEL "
     body = MIMEText(
         html,
         "html")
@@ -32,10 +32,7 @@ def send_email(plant_id: int, value: float, value_type: str, condition:str ) -> 
     client.send_raw_email(
         Source=ENV['FROM_EMAIL'],
         Destinations=[
-            ENV['TO_EMAIL1'],
-            ENV['TO_EMAIL2'],
-            ENV['TO_EMAIL3'],
-            ENV['TO_EMAIL4']
+            ENV['TO_EMAIL']
         ],
         RawMessage={
             'Data': message.as_string()
@@ -145,11 +142,11 @@ if __name__ == "__main__":
     # Soil moisture exceed upper bound of 90. 
     send_email(13, 95.2, 'soil moisture', 'exceeded')
 
-    # # Soil moisture doesn't meet lower bound of 30. 
-    # send_email(13, 12, 'soil moisture', 'not met')
+    # Soil moisture doesn't meet lower bound of 30. 
+    send_email(13, 12.6, 'soil moisture', 'not met')
 
-    # # Temperature exceeds upper bound of 50.
-    # send_email(13, 55, 'temperature', 'exceeds')
+    # Temperature exceeds upper bound of 50.
+    send_email(13, 51, 'temperature', 'exceeded')
 
-    # # Temperature exceeds lower bound of 5.
-    # send_email(13, 2, 'temperature', 'not met')
+    # Temperature exceeds lower bound of 5.
+    send_email(13, 2, 'temperature', 'not met')
