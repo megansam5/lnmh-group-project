@@ -18,6 +18,13 @@ jobs:
           python-version: '3.12'
       - name: "Get repo code"
         uses: actions/checkout@v4
+      - name: "Test pipeline"
+        run:  |
+              cd pipeline/
+              pip install -r requirements.txt
+              pytest
+              echo 'Pipeline tests finished.'
+              cd ..
       - name: "Test data-transfer-pipeline"
         run:  |
               cd data-transfer-pipeline/
@@ -25,13 +32,6 @@ jobs:
               pip install -r requirements.txt
               pytest
               echo 'Data transfer pipeline tests finished.'
-              cd ..
-      - name: "Test pipeline"
-        run:  |
-              cd pipeline/
-              pip install -r requirements.txt
-              pytest
-              echo 'Pipeline tests finished.'
               cd ..
   lint:
     name:    "Run lint"
