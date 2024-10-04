@@ -1,12 +1,11 @@
 """A script to remove out of date data from the RDS."""
-from typing import Tuple, Optional
 from datetime import datetime, timedelta
 from os import environ as ENV
 
 import pandas as pd
 from dotenv import load_dotenv
 
-from extract import create_connection
+from extract import create_connection, extract_recordings
 
 
 def delete_outdataed_recordings() -> None:
@@ -26,7 +25,7 @@ def delete_outdataed_recordings() -> None:
     print("Old recordings deleted")
 
 
-def fetch_current_averages(conn, plant_id: int) -> Optional[Tuple[float, float, int]]:
+def fetch_current_averages(conn, plant_id: int) -> dict:
     """
     Fetch the current average temperature, soil moisture, and recording count for a specific plant.
     """
@@ -63,6 +62,7 @@ def insert_new_plant_average(conn, plant_id: int, avg_temp: float, avg_soil_mois
             INSERT INTO {ENV['SCHEMA_NAME']}.plant_average (plant_id, average_temperature, average_soil_moisture, recording_count)
             VALUES (%s, %s, %s, %s)
         """, (plant_id, avg_temp, avg_soil_moisture, recordings))
+    conn.commit()
 
 
 def calculate_new_averages(recordings: pd.DataFrame) -> pd.DataFrame:

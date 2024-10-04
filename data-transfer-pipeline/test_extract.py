@@ -3,7 +3,31 @@ from unittest.mock import patch, MagicMock
 
 import pandas as pd
 
-from extract import extract_recordings
+from extract import extract_recordings, create_connection
+
+
+@patch('pymssql.connect')
+@patch.dict('clean.ENV', {
+    'DB_HOST': 'fake_host',
+    'DB_NAME': 'fake_db',
+    'DB_USER': 'fake_user',
+    'DB_PASSWORD': 'fake_password'
+})
+def test_create_connection(fake_connect):
+    fake_conn = MagicMock()
+    fake_connect.return_value = fake_conn
+    conn = create_connection()
+
+    fake_connect.assert_called_once_with(
+        server='fake_host',
+        database='fake_db',
+        user='fake_user',
+        password='fake_password',
+        port=1433,
+        as_dict=True
+    )
+
+    assert conn == fake_conn
 
 
 @patch('extract.create_connection')
