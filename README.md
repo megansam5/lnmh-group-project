@@ -84,19 +84,3 @@ The scripts within this directory named below are run chronologically as listed.
 
     #### Figure 6: Visual presenting additional information about a select plant, with a picture to the left of easy identification.
     <img src="assets/plant_info.png" alt="Data Visualisation" width="450"/>
-
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.11+
-- Terraform
-- AWS CLI
-
-### Installation
-
-1. **Clone the Repository**:
-   ```sh
-   git clone https://github.com/megansam5/lnmh-group-project.git
-   cd lnmh-group-project
