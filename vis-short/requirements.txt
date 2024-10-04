@@ -1,5 +1,0 @@
-streamlit
-altair
-pandas
-pymssql
-python-dotenv

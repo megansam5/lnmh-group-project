@@ -1,11 +1,11 @@
+"""Streamlit dashboard."""
+from os import environ as ENV
+
 import pymssql
 import pandas as pd
 import altair as alt
 import streamlit as st
 from dotenv import load_dotenv
-from os import environ as ENV
-
-"""Streamlit dashboard."""
 
 
 def create_connection():
