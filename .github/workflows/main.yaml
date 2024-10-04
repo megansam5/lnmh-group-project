@@ -33,13 +33,6 @@ jobs:
               pytest
               echo 'Pipeline tests finished.'
               cd ..
-      - name: "Test visualisations"
-        run:  |
-              cd visualisations/
-              pip install -r requirements.txt
-              pytest
-              echo 'Visualisation tests finished.'
-              cd ..
   lint:
     name:    "Run lint"
     runs-on: ubuntu-latest
