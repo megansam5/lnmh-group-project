@@ -2,3 +2,6 @@ streamlit
 altair
 pandas
 python-dotenv
+pytest
+pylint
+pytest-cov
