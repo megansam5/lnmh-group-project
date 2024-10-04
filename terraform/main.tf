@@ -38,6 +38,16 @@ data "aws_iam_policy_document" "lambda_permissions_policy" {
 
     resources = ["*"] 
   }
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "ses:SendEmail",
+      "ses:SendRawEmail"
+    ]
+
+    resources = ["*"] 
+  }
 }
 
 # IAM role for lambda
