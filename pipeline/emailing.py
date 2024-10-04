@@ -26,23 +26,13 @@ def send_email(plant_id: int, value: float, value_type: str, condition:str ) -> 
         "html")
     message.attach(body)
 
-    # client.send_raw_email(
-    #     Source=ENV['FROM_EMAIL'],
-    #     Destinations=[
-    #         ENV['TO_EMAIL1'],
-    #         ENV['TO_EMAIL2'],
-    #         ENV['TO_EMAIL3'],
-    #         ENV['TO_EMAIL4']
-    #     ],
-    #     RawMessage={
-    #         'Data': message.as_string()
-    #     }
-    # )
-
     client.send_raw_email(
-        Source='trainee.andrew.mcwilliam@sigmalabs.co.uk',
+        Source=ENV['FROM_EMAIL'],
         Destinations=[
-        'trainee.andrew.mcwilliam@sigmalabs.co.uk'
+            ENV['TO_EMAIL1'],
+            ENV['TO_EMAIL2'],
+            ENV['TO_EMAIL3'],
+            ENV['TO_EMAIL4']
         ],
         RawMessage={
             'Data': message.as_string()
