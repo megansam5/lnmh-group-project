@@ -1,4 +1,4 @@
-altair
 streamlit
+altair
 pandas
-pyathena
+python-dotenv
