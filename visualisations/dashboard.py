@@ -4,7 +4,7 @@ import altair as alt
 import streamlit as st
 from dotenv import load_dotenv
 from os import environ as ENV
-<< << << < HEAD
+
 """Streamlit dashboard."""
 
 
