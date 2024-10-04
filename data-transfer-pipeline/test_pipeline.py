@@ -1,7 +1,6 @@
 # pylint: skip-file
 from unittest.mock import patch
 import pandas as pd
-import os
 
 from pipeline import full_pipeline
 
