@@ -1,0 +1,73 @@
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    name:    "Run tests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Install python"
+        uses: actions/setup-python@v5.1.1
+        with:
+          python-version: '3.12'
+      - name: "Get repo code"
+        uses: actions/checkout@v4
+      - name: "Test pipeline"
+        run:  |
+              cd pipeline/
+              pip install -r requirements.txt
+              pytest
+              echo 'Pipeline tests finished.'
+              cd ..
+      - name: "Test data-transfer-pipeline"
+        run:  |
+              cd data-transfer-pipeline/
+              echo "SCHEMA_NAME=${{ secrets.SCHEMA_NAME }}" > .env
+              echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+              echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+              echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+              echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+              pip install -r requirements.txt
+              pytest
+              echo 'Data transfer pipeline tests finished.'
+              cd ..
+
+  lint:
+    name:    "Run lint"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Install Python"
+        uses: actions/setup-python@v5.1.1
+        with:
+          python-version: '3.12'
+      - name: "Get repo code"
+        uses: actions/checkout@v4
+      - name: "Install pylint"
+        run:  pip install pylint
+      - name: "Lint data-transfer-pipeline"
+        run:  |
+              cd data-transfer-pipeline/
+              pip install -r requirements.txt
+              pylint *.py --fail-under=8
+              echo 'Data transfer pipeline linting finished.'
+              cd ..
+      - name: "Lint pipeline"
+        run:  |
+              cd pipeline/
+              pip install -r requirements.txt
+              pylint *.py --fail-under=8
+              echo 'Pipeline linting finished.'
+              cd ..
+      - name: "Lint visualisations"
+        run:  |
+              cd visualisations/
+              pip install -r requirements.txt
+              pylint *.py --fail-under=8
+              echo 'Visualisation linting finished.'
+              cd ..
