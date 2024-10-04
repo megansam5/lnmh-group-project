@@ -15,7 +15,7 @@ This directory contains the schema SQL and two bash scripts to connect to and re
 
 ## Usage
 
-1. Ensure you have an `.env` file inside the pipeline directory (`../pipeline`).
+1. Ensure you have an `.env` file inside the [pipeline directory](../pipeline).
 2. Inside the `.env`, make sure you have the following:
 
 ```
